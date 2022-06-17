@@ -1,0 +1,88 @@
+name: Test
+
+on:
+  pull_request:
+  push:
+    paths:
+    - .github/workflows/test.yml
+    - src/**
+    - client.ovpn
+    - default.project.json
+    - foreman.toml
+    - TestExecution.lua
+    - wally.lock
+    - wally.toml
+
+env:
+  ROBLOSECURITY: ${{ secrets.ROBLOSECURITY || '_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_2CA5CE49833F6119BA5955F76C429C5AB629B5AB4BF5C1C90FD2D774B130B5EB57A53DC573C69ABC8F62EE007ADEBB40188999FB8F06FD16AAA914992309854D92173AE8D9CD1190F4E5B3A0F1EF9FD531F4EA0C3E284F0495872AB70D1587D5C303F9EF2EDB94884D3ABE700D48CB3CAFE537BA1FC7A8E383D49749B2A3825CE5D990E37AA498FE3025C16A53293E21FCEBCD3CEB698126DA5570754329A3998C79240B77686ED2B2BBAA506BA1267C635BC2328829B6F6FFA0CE1B30A2F57B7458F7B730460B62C77F80D5C08E90464EFDD4734AF2A284B23B57641D8520FC6FE6330BEA81D4AC85236554BA305CEBC6AA82432516CE5AC170F0FF13CDC82DB11EBCCC3377C03A97ED2EDCB371819D51D36AF61BB14F8DFB0C5389CAF82F47E7AB4E113FEA72C3E0E9CD2F57AF3D01FAF9E3525090993AE2D96CC07BD8C512C5B8A463B518DE3620090D6005CA57445C84521573397211D5834D0D5AE45FC7B188A146329BC96DA1EB927E90835ED25E92CFE7A845FCB899808B106989C64876D5CF36' }}
+
+jobs:
+  test:
+    name: Test
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2.3.4
+    - uses: Roblox/setup-foreman@v1.0.1
+      name: Install Foreman
+      with:
+          token: ${{ SECRETS.GITHUB_TOKEN }}
+    - name: Install Packages
+      shell: bash
+      run: ./wally.exe install
+    - name: Build Test Place
+      run: rojo build default.project.json -o test.rbxl
+    - name: Download OpenVPN
+      run: choco install openvpn
+    - name: Run OpenVPN
+      run: Start-Process -FilePath "C:\\Program Files\\OpenVPN\\bin\\openvpn.exe" -ArgumentList "--config $((Resolve-Path .\\client.ovpn).Path)"
+    - name: Poll for IP Change
+      run: |
+        $elapsed = 0
+        while ($true) {
+          try {
+            $response = Invoke-WebRequest -Uri 'https://httpbin.org/ip' -Method GET -UseBasicParsing
+            $content = ConvertFrom-Json $response.Content
+            if ($content.origin -eq "104.238.130.74") {
+              break
+            }
+          } catch {}
+          if ($elapsed -ge 30) {
+            Write-Error "Timeout reached!"
+            exit 1
+          }
+          Write-Output "Polling.. Elasped: $elapsed, IP: $($content.origin)"
+          Start-Sleep 5
+          $elapsed += 5
+        }
+        Write-Output "Success!"
+    - name: Validate Cookie
+      run: |
+        $session = New-Object Microsoft.PowerShell.Commands.WebRequestSession
+        $cookie = New-Object System.Net.Cookie
+        $cookie.Name = ".ROBLOSECURITY"
+        $cookie.Value = "${{ env.ROBLOSECURITY }}"
+        $cookie.Domain = ".roblox.com"
+        $session.Cookies.Add($cookie);
+        Invoke-WebRequest "https://avatar.roblox.com/v1/avatar" -WebSession $session -UseBasicParsing
+    - name: Install Roblox Studio
+      uses: OrbitalOwen/roblox-win-installer-action@1.1
+      with:
+        cookie: ${{ env.ROBLOSECURITY }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Run tests
+      shell: bash
+      run: run-in-roblox --place test.rbxl --script TestExecution.lua > test-out.txt
+      continue-on-error: true
+    - name: Screenshot
+      if: failure()
+      uses: OrbitalOwen/desktop-screenshot-action@0.1
+      with:
+        file-name: 'desktop.jpg'
+    - name: Print test results
+      shell: bash
+      run: cat test-out.txt
+    - name: Check test status
+      shell: bash
+      run: cat test-out.txt | grep "0 failed" || (cat test-out.txt && exit 1)

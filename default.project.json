@@ -1,0 +1,38 @@
+{
+	"name": "dragon-game",
+	"tree": {
+		"$className": "DataModel",
+
+		"Players": {
+			"$className": "Players",
+			"$properties": {
+				"CharacterAutoLoads":false
+			}
+		},
+
+		"ReplicatedStorage": {
+			"$className": "ReplicatedStorage",
+			"$path": "src/shared",
+			"DevPackages": {
+				"$path": "DevPackages"
+			},
+			"Packages": {
+				"$className": "Folder",
+				"$path": "Packages"
+			}
+		},
+
+		"ServerScriptService": {
+			"$className": "ServerScriptService",
+			"$path": "src/server"
+		},
+
+		"StarterPlayer": {
+			"$className": "StarterPlayer",
+			"StarterPlayerScripts": {
+				"$className": "StarterPlayerScripts",
+				"$path": "src/client"
+			}
+		}
+	}
+}

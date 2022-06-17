@@ -1,0 +1,30 @@
+name: Lint
+
+on:
+  push:
+    paths:
+    - src/**
+    - foreman.toml
+    - selene.toml
+    - testez.toml
+  pull_request:
+    paths:
+    - src/**
+    - foreman.toml
+    - selene.toml
+    - testez.toml
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2.3.4
+    - uses: Roblox/setup-foreman@v1.0.1
+      name: Install Foreman
+      with:
+          token: ${{ SECRETS.GITHUB_TOKEN }}
+    - name: Lint
+      run: |
+        selene ./src
