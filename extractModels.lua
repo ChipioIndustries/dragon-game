@@ -1,4 +1,4 @@
-local game = remodel.readPlaceFile("dev.rbxl")
+local game = remodel.readPlaceFile("build.rbxl")
 
 local ServerStorage = game:GetService("ServerStorage")
 

@@ -3,10 +3,17 @@
 	"tree": {
 		"$className": "DataModel",
 
+		"HttpService": {
+			"$className": "HttpService",
+			"$properties": {
+				"HttpEnabled": true
+			}
+		},
+
 		"Players": {
 			"$className": "Players",
 			"$properties": {
-				"CharacterAutoLoads":false
+				"CharacterAutoLoads": false
 			}
 		},
 
@@ -25,6 +32,13 @@
 		"ServerScriptService": {
 			"$className": "ServerScriptService",
 			"$path": "src/server"
+		},
+
+		"ServerStorage": {
+			"$className": "ServerStorage",
+			"Assets": {
+				"$path": "assets"
+			}
 		},
 
 		"StarterPlayer": {

@@ -1,5 +1,5 @@
 DevPackages
 Packages
 roblox.toml
-dev.rbxl
-dev.rbxl.lock
+build.rbxl
+build.rbxl.lock
