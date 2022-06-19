@@ -3,6 +3,8 @@
 
 local StaticLiveOpsData = {
 	LiveOpsRefreshRate = 5;
+	LiveOpsRetries = 3;
+	LiveOpsRetryDelay = 0.5;
 }
 
 return StaticLiveOpsData
