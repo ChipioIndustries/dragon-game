@@ -9,7 +9,7 @@ This project uses Rodux, a library for centralizing game state. The store state 
 
 ```lua
 local state = {
-]
+	level = 3;
+
 }
 ```
-

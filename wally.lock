@@ -5,7 +5,7 @@ registry = "test"
 [[package]]
 name = "chipioindustries/dragon-game"
 version = "0.1.0"
-dependencies = [["Flipper", "reselim/flipper@2.0.0"], ["LeakyBucket", "chipioindustries/leaky-bucket@1.0.1"], ["Llama", "chipioindustries/llama@1.2.2"], ["Maid", "flamenco687/maid@3.2.2"], ["Remotes", "chipioindustries/remotes@1.0.1"], ["ReplicationMiddleware", "chipioindustries/replication-middleware@1.0.0"], ["Roact", "roblox/roact@1.4.2"], ["RoactRodux", "chipioindustries/roact-rodux@1.0.4"], ["Rodux", "chipioindustries/rodux@3.0.4"]]
+dependencies = [["Flipper", "reselim/flipper@2.0.0"], ["LeakyBucket", "chipioindustries/leaky-bucket@1.0.1"], ["Llama", "chipioindustries/llama@1.2.2"], ["Maid", "flamenco687/maid@3.2.2"], ["Promise", "evaera/promise@4.0.0"], ["Remotes", "chipioindustries/remotes@1.0.1"], ["ReplicationMiddleware", "chipioindustries/replication-middleware@1.0.0"], ["Roact", "roblox/roact@1.4.2"], ["RoactRodux", "chipioindustries/roact-rodux@1.0.4"], ["Rodux", "chipioindustries/rodux@3.0.4"], ["Timer", "sleitnick/timer@1.1.1"]]
 
 [[package]]
 name = "chipioindustries/leaky-bucket"
@@ -48,6 +48,11 @@ version = "1.0.3"
 dependencies = []
 
 [[package]]
+name = "evaera/promise"
+version = "4.0.0"
+dependencies = []
+
+[[package]]
 name = "flamenco687/maid"
 version = "3.2.2"
 dependencies = []
@@ -76,3 +81,13 @@ dependencies = []
 name = "roblox/testez"
 version = "0.4.1"
 dependencies = []
+
+[[package]]
+name = "sleitnick/signal"
+version = "1.2.0"
+dependencies = []
+
+[[package]]
+name = "sleitnick/timer"
+version = "1.1.1"
+dependencies = [["Signal", "sleitnick/signal@1.2.0"]]
