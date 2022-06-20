@@ -1,9 +1,11 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
-local Services = ServerScriptService.Services
+local serverServices = ServerScriptService.Services
+local sharedServices = ReplicatedStorage.Services
 
-local LiveOpsService = require(Services.LiveOpsService)
-local PlayerService = require(Services.PlayerService)
+local LiveOpsService = require(serverServices.LiveOpsService)
+local PlayerService = require(sharedServices.PlayerService)
 
 LiveOpsService:init()
 PlayerService:init()

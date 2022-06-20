@@ -1,4 +1,8 @@
-local CONFIG = {
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Llama = require(ReplicatedStorage.Packages.Llama)
+
+local CONFIG = Llama.Dictionary.throwOnNilIndex({
 	MinimumLiveOpsRefreshRate = 2;
 	DefaultLiveOpsRetries = 10;
 	DefaultLiveOpsRetryDelay = 1;
@@ -14,7 +18,14 @@ local CONFIG = {
 			Retries = "LiveOpsRetries";
 			RetryDelay = "LiveOpsRetryDelay";
 		}
-	}
-}
+	};
+	LevelOrder = {
+		"Archipelago";
+		"Northada";
+		"CastlePlanet";
+		"Volcano";
+		"Hell";
+	};
+})
 
 return CONFIG
