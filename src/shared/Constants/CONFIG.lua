@@ -3,9 +3,11 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Llama = require(ReplicatedStorage.Packages.Llama)
 
 local CONFIG = Llama.Dictionary.throwOnNilIndex({
-	MinimumLiveOpsRefreshRate = 2;
-	DefaultLiveOpsRetries = 10;
-	DefaultLiveOpsRetryDelay = 1;
+	LiveOps = {
+		MinimumRefreshRate = 2;
+		DefaultRetries = 10;
+		DefaultRetryDelay = 1;
+	};
 	Keys = {
 		DataStore = {
 			LiveOps = {
@@ -17,7 +19,12 @@ local CONFIG = Llama.Dictionary.throwOnNilIndex({
 			RefreshRate = "LiveOpsRefreshRate";
 			Retries = "LiveOpsRetries";
 			RetryDelay = "LiveOpsRetryDelay";
-		}
+		};
+		Tags = {
+			EnemySpawn = "EnemySpawn";
+			LevelEnd = "LevelEnd";
+			PlayerSpawn = "PlayerSpawn";
+		};
 	};
 	LevelOrder = {
 		"Archipelago";

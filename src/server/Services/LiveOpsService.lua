@@ -33,7 +33,7 @@ end
 function LiveOpsService:_getMaxRetries()
 	return self:_getSettingOrDefault(
 		CONFIG.Keys.LiveOps.Retries,
-		CONFIG.DefaultLiveOpsRetries,
+		CONFIG.LiveOps.DefaultRetries,
 		Enums.DefaultBehavior.None
 	)
 end
@@ -41,7 +41,7 @@ end
 function LiveOpsService:_getRefreshRate()
 	return self:_getSettingOrDefault(
 		CONFIG.Keys.LiveOps.RefreshRate,
-		CONFIG.MinimumLiveOpsRefreshRate,
+		CONFIG.LiveOps.MinimumRefreshRate,
 		Enums.DefaultBehavior.Max
 	)
 end
@@ -49,15 +49,15 @@ end
 function LiveOpsService:_getRetryDelay()
 	return self:_getSettingOrDefault(
 		CONFIG.Keys.LiveOps.RetryDelay,
-		CONFIG.DefaultLiveOpsRetryDelay,
+		CONFIG.LiveOps.DefaultRetryDelay,
 		Enums.DefaultBehavior.Min
 	)
 end
 
 function LiveOpsService:_getSettingOrDefault(settingName, default, defaultBehavior)
 	local setting = default
-	if self._data then
-		setting = self._data[settingName] or default
+	if self._data and self._data.LiveOps then
+		setting = self._data.LiveOps[settingName] or default
 		if defaultBehavior ~= Enums.DefaultBehavior.None then
 			setting = math[defaultBehavior:lower()](setting, default)
 		end

@@ -3,6 +3,8 @@ local ServerStorage = game:GetService("ServerStorage")
 
 local StoreService = require(ReplicatedStorage.Services.StoreService)
 
+local Level = require(ReplicatedStorage.Classes.Level)
+
 local constants = ReplicatedStorage.Constants
 local Responses = require(constants.Responses)
 local CONFIG = require(constants.CONFIG)
@@ -15,10 +17,14 @@ LevelService.__index = LevelService
 function LevelService.new()
 	local self = setmetatable({
 		_levels = ServerStorage.Assets.Levels;
-		loadedLevel = nil;
+		_loadedLevel = nil;
 	}, LevelService)
 
 	return self
+end
+
+function LevelService:getCurrentLevel()
+	return self._loadedLevel
 end
 
 function LevelService:init()
@@ -40,15 +46,14 @@ function LevelService:_loadLevel(levelName)
 	local level = self._levels:FindFirstChild(levelName)
 	assert(level, Responses.LevelService.InvalidLevelName)
 	self:_unloadLevel()
-	local newLevel = level:Clone()
-	newLevel.Parent = workspace
-	self._loadedLevel = newLevel
+	self._loadedLevel = Level.new(level)
+	self._loadedLevel:init()
 	-- TODO: respawn player and enemies from whatever script calls this
 end
 
 function LevelService:_unloadLevel()
 	if self._loadedLevel then
-		self._loadedLevel:Destroy()
+		self._loadedLevel:destroy()
 	end
 end
 
