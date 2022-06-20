@@ -20,7 +20,10 @@ local Responses = Llama.Dictionary.throwOnNilIndex({
 			InvalidInstance = "Argument 1 must be an Instance, got %s";
 			InvalidTag = "Argument 2 must be a string, got %s";
 		}
-	}
+	};
+	Trigger = {
+		InvalidInstance = "Argument 2 must be a BasePart, got %s"
+	};
 })
 
 return Responses
