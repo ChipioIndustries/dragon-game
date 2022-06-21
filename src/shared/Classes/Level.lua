@@ -1,9 +1,12 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local StoreService = require(ReplicatedStorage.Services.StoreService)
 local CONFIG = require(ReplicatedStorage.Constants.CONFIG)
-local Enemy = require(ReplicatedStorage.Classes.Enemy)
+
 local getTaggedInstancesInDirectory = require(ReplicatedStorage.Utilities.Selectors.getTaggedInstancesInDirectory)
+
+local classes = ReplicatedStorage.Classes
+local LevelEndTrigger = require(classes.LevelEndTrigger)
+local Enemy = require(classes.Enemy)
 
 local Level = {}
 Level.__index = Level
@@ -12,6 +15,7 @@ function Level.new(levelService, levelTemplate)
 	local self = setmetatable({
 		_levelService = levelService;
 		_levelTemplate = levelTemplate;
+		_levelEndTrigger = nil;
 		_levelInstance = nil;
 		_enemies = {};
 	}, Level)
@@ -34,6 +38,11 @@ function Level:init()
 	for _index, enemySpawn in ipairs(enemySpawns) do
 		local newEnemy = Enemy.new(enemyTemplate)
 	end
+
+	-- initialize level end trigger
+	local levelEndInstance = getTaggedInstancesInDirectory(self._loadedLevel, CONFIG.Keys.Tags.LevelEnd)
+	local levelEndTrigger = LevelEndTrigger.new(self, levelEndInstance)
+	self._levelEndTrigger = levelEndTrigger
 end
 
 function Level:destroy()

@@ -21,6 +21,9 @@ local StaticLiveOpsData = Llama.Dictionary.throwOnNilIndex({
 		Skybox = {};
 		Lighting = {};
 	};
+	Enemy = {
+		PathRefreshRate = 0.5;
+	};
 	Levels = {
 		Archipelago = {
 			Environment = {

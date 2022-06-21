@@ -37,10 +37,21 @@ function PlayerService:_addPlayer(player)
 end
 
 function PlayerService:_removePlayer(player)
-	if self[player.UserId] then
+	if self._addedPlayers[player.UserId] then
 		self.playerRemoving:fire(player)
-		self[player.UserId] = nil
+		self._addedPlayers[player.UserId] = nil
 	end
+end
+
+function PlayerService:getPlayers()
+	local players = {}
+	for playerId, _value in pairs(self._addedPlayers) do
+		local player = Players:GetPlayerByUserId(playerId)
+		if player then
+			table.insert(players, player)
+		end
+	end
+	return players
 end
 
 function PlayerService:init()
