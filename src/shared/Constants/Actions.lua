@@ -6,6 +6,7 @@ local Actions = Llama.Dictionary.throwOnNilIndex({
 	setLiveOpsData = "setLiveOpsData";
 	incrementLevel = "incrementLevel";
 	setLevel = "setLevel";
+	setSpawnPosition = "setSpawnPosition";
 })
 
 return Actions

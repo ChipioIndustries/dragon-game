@@ -37,6 +37,7 @@ function Level:init()
 	local enemySpawns = getTaggedInstancesInDirectory(self._loadedLevel, CONFIG.Keys.Tags.EnemySpawn)
 	for _index, enemySpawn in ipairs(enemySpawns) do
 		local newEnemy = Enemy.new(enemyTemplate)
+		table.insert(self._enemies, newEnemy)
 	end
 
 	-- initialize level end trigger
@@ -50,6 +51,7 @@ function Level:destroy()
 	for _index, enemy in ipairs(self._enemies) do
 		enemy:destroy()
 	end
+	self._levelEndTrigger:destroy()
 end
 
 return Level

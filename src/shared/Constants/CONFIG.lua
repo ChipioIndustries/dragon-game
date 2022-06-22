@@ -34,6 +34,7 @@ local CONFIG = Llama.Dictionary.throwOnNilIndex({
 		"Volcano";
 		"Hell";
 	};
+	DefaultSpawnPosition = CFrame.new(0, 0, 0);
 })
 
 return CONFIG
