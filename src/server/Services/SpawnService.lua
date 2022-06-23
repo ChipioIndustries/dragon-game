@@ -16,11 +16,8 @@ function SpawnService.new()
 end
 
 function SpawnService:init()
-	print("init")
-	PlayerService.playerAdded:connect(function(player)
-		print("plr")
+	self._playerAddedConnection = PlayerService.playerAdded:connect(function(player)
 		player.CharacterAdded:Connect(function(character)
-			print("char")
 			self:moveCharacterToSpawn(character)
 		end)
 	end)

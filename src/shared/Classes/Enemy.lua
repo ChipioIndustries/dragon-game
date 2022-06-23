@@ -40,6 +40,14 @@ function Enemy:_getPathfindingConfiguration()
 	return self:_getLiveOps().Pathfinding
 end
 
+function Enemy:_getEyesightDistance()
+	return self:_getLiveOps().EyesightDistance
+end
+
+function Enemy:_getAnimations()
+	return self:_getLiveOps().Animations
+end
+
 function Enemy:_getLiveOps()
 	return StoreService:getState().liveOpsData.Enemy
 end
@@ -51,6 +59,12 @@ end
 function Enemy:_getRoot()
 	local root = getTaggedInstancesInDirectory(self._enemyInstance, CONFIG.Keys.Tags.EnemyRoot)[1]
 	assert(root, Responses.Enemy.NoEnemyRoot:format(self._name))
+	return root
+end
+
+function Enemy:_getAnimator()
+	local root = getTaggedInstancesInDirectory(self._enemyInstance, CONFIG.Keys.Tags.Animator)[1]
+	assert(root, Responses.Enemy.NoEnemyAnimator:format(self._name))
 	return root
 end
 
@@ -76,7 +90,7 @@ function Enemy:_getTarget()
 	local potentialTargets = self:_getPotentialTargets()
 	local position = self:_getPosition().Position
 	local closestTarget
-	local closestDistance = math.huge
+	local closestDistance = self:_getEyesightDistance()
 	for _index, potentialTarget in ipairs(potentialTargets) do
 		local distance = (potentialTarget.Position - position).magnitude
 		if distance < closestDistance then
@@ -85,6 +99,16 @@ function Enemy:_getTarget()
 		end
 	end
 	return closestTarget, closestDistance
+end
+
+function Enemy:_playAnimation(animationId, looped)
+	assert(typeof(animationId) == "number", Responses.Enemy.BadAnimationId:format(typeof(animationId)))
+	local animation = Instance.new("Animation")
+	animation.AnimationId = "rbxassetid://" .. tostring(animationId)
+	local animator = self:_getAnimator()
+	local animationTrack = animator:LoadAnimation(animation)
+	animationTrack.Looped = looped or false
+	animationTrack:Play()
 end
 
 function Enemy:_updatePath()
@@ -97,14 +121,16 @@ function Enemy:_updatePath()
 		if success and path.Status == Enum.PathStatus.Success then
 			self._waypoints = path:GetWaypoints()
 			self:_moveToNextWaypoint()
-		else
+		elseif path.Status ~= Enum.PathStatus.NoPath then
 			warn(errorMessage, path.Status)
 		end
 	end
 end
 
 function Enemy:_moveToNextWaypoint()
-	self._enemyInstance.Humanoid:MoveTo(self._waypoints[1].Position)
+	if self._waypoints[1] then
+		self._enemyInstance.Humanoid:MoveTo(self._waypoints[1].Position)
+	end
 end
 
 function Enemy:init(spawnPosition)
@@ -117,6 +143,7 @@ function Enemy:init(spawnPosition)
 	self._pathUpdateTimerConnection = self._pathUpdateTimer.Tick:Connect(function()
 		self:_updatePath()
 	end)
+	self._pathUpdateTimer:Start()
 	self._refreshRateChangedConnection = StoreService:getValueChangedSignal("liveOpsData.Enemy.PathRefreshRate"):connect(function(_newValue, _oldValue)
 		self:_updatePathTimerRefreshRate();
 	end)
@@ -126,6 +153,7 @@ function Enemy:init(spawnPosition)
 		end
 		self:_moveToNextWaypoint()
 	end)
+	self:_playAnimation(self:_getAnimations().Idle, true)
 end
 
 function Enemy:destroy()

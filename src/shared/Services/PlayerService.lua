@@ -30,6 +30,7 @@ function PlayerService:_addPlayer(player)
 	for _index, loader in ipairs(self._loaders) do
 		loader(player)
 	end
+	self._addedPlayers[player.UserId] = true
 	self.playerAdded:fire(player)
 	if RunService:IsServer() then
 		playerAddedRemote:FireAllClients(player)

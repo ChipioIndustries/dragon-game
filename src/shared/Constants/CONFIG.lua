@@ -28,6 +28,7 @@ local CONFIG = Llama.Dictionary.throwOnNilIndex({
 			LevelEnd = "LevelEnd";
 			PlayerSpawn = "PlayerSpawn";
 			EnemyRoot = "EnemyRoot";
+			Animator = "Animator";
 		};
 	};
 	LevelOrder = {

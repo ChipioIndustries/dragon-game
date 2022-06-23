@@ -11,7 +11,7 @@ local replicationMiddleware = ReplicationMiddleware.new()
 local store = Rodux.Store.new(Reducer, {}, {
 	Rodux.thunkMiddleware;
     replicationMiddleware;
-	Rodux.loggerMiddleware;
+	--Rodux.loggerMiddleware;
 })
 
 return store

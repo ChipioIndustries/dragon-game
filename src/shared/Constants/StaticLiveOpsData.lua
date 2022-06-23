@@ -23,7 +23,7 @@ local StaticLiveOpsData = Llama.Dictionary.throwOnNilIndex({
 	};
 	Enemy = {
 		PathRefreshRate = 0.5;
-		EyesightDistance = 25;
+		EyesightDistance = 50;
 		Pathfinding = {
 			AgentRadius = 6;
 			AgentHeight = 5;
@@ -58,13 +58,6 @@ return StaticLiveOpsData
 
 --[[
 game:GetService("DataStoreService"):GetDataStore("LiveOps"):SetAsync("LiveOpsData", {
-	Animations = {
-		Death = 9966955888;
-		FireBreath = 9966952928;
-		Idle = 9966954638;
-		Walk = 9966951173;
-		WingBeat = 9966957583;
-	};
 	LiveOps = {
 		RefreshRate = 5;
 		Retries = 3;
@@ -76,13 +69,20 @@ game:GetService("DataStoreService"):GetDataStore("LiveOps"):SetAsync("LiveOpsDat
 	};
 	Enemy = {
 		PathRefreshRate = 0.5;
-		EyesightDistance = 25;
+		EyesightDistance = 50;
 		Pathfinding = {
 			AgentRadius = 6;
 			AgentHeight = 5;
 			AgentCanJump = false;
 			WaypointSpacing = nil;
-		}
+		};
+		Animations = {
+			Death = 9966955888;
+			FireBreath = 9966952928;
+			Idle = 9966954638;
+			Walk = 9966951173;
+			WingBeat = 9966957583;
+		};
 	};
 	Levels = {
 		Archipelago = {

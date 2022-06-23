@@ -27,7 +27,9 @@ local Responses = Llama.Dictionary.throwOnNilIndex({
 		InvalidInstance = "Argument 2 must be a BasePart, got %s";
 	};
 	Enemy = {
-		NoEnemyRoot = "Enemy %s lacks a valid root part"
+		NoEnemyRoot = "Enemy %s lacks a valid root part";
+		NoEnemyAnimator = "Enemy %s lacks a valid animator";
+		BadAnimationId = "Animation ID must be a number, got %s";
 	}
 })
 
