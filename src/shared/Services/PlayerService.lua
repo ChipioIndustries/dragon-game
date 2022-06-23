@@ -73,4 +73,12 @@ function PlayerService:init()
 	end)
 end
 
-return PlayerService
+if RunService:IsServer() then
+	function PlayerService:respawnAllPlayers()
+		for _, player in ipairs(self:getPlayers()) do
+			player:LoadCharacter()
+		end
+	end
+end
+
+return PlayerService.new()

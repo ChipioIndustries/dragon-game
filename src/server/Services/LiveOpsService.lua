@@ -7,6 +7,7 @@ local StoreService = require(ReplicatedStorage.Services.StoreService)
 local packages = ReplicatedStorage.Packages
 local Promise = require(packages.Promise)
 local Timer = require(packages.Timer)
+local Llama = require(packages.Llama)
 
 local constants = ReplicatedStorage.Constants
 local CONFIG = require(constants.CONFIG)
@@ -79,7 +80,8 @@ function LiveOpsService:init()
 	self:_update():catch(function(failure)
 		warn(Responses.LiveOpsService.InitialDataFailed, failure)
 		self:_setLiveOpsData(StaticLiveOpsData)
-	end)
+	end):await()
+
 
 	-- bind update function to timer
 	self._updateTimerConnection = self._updateLoopTimer.Tick:Connect(function()
@@ -90,8 +92,12 @@ end
 
 function LiveOpsService:_setLiveOpsData(data)
 	assert(data, Responses.LiveOpsService.setLiveOpsDataNoData)
-	self._data = data
-	return Promise.resolve(StoreService:dispatch(setLiveOpsData(data)))
+	if not Llama.Dictionary.equalsDeep(data, self._data) then
+		self._data = data
+		return Promise.resolve(StoreService:dispatch(setLiveOpsData(data)))
+	else
+		return Promise.resolve()
+	end
 end
 
 function LiveOpsService:_update()

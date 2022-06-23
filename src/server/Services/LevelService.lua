@@ -1,4 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
 
 local StoreService = require(ReplicatedStorage.Services.StoreService)
@@ -8,6 +9,8 @@ local Level = require(ReplicatedStorage.Classes.Level)
 local constants = ReplicatedStorage.Constants
 local Responses = require(constants.Responses)
 local CONFIG = require(constants.CONFIG)
+
+local incrementLevel = require(ServerScriptService.Actions.incrementLevel)
 
 local getLevelNameByIndex = require(ReplicatedStorage.Utilities.Selectors.getLevelNameByIndex)
 
@@ -25,6 +28,18 @@ end
 
 function LevelService:getCurrentLevel()
 	return self._loadedLevel
+end
+
+function LevelService:getSpawnPosition()
+	local currentLevel = self:getCurrentLevel()
+	if currentLevel then
+		return currentLevel:getSpawnPosition()
+	end
+	return CFrame.new()
+end
+
+function LevelService:nextLevel()
+	StoreService:dispatch(incrementLevel())
 end
 
 function LevelService:init()
@@ -46,9 +61,8 @@ function LevelService:_loadLevel(levelName)
 	local level = self._levels:FindFirstChild(levelName)
 	assert(level, Responses.LevelService.InvalidLevelName)
 	self:_unloadLevel()
-	self._loadedLevel = Level.new(level)
+	self._loadedLevel = Level.new(self, level)
 	self._loadedLevel:init()
-	-- TODO: respawn player and enemies from whatever script calls this
 end
 
 function LevelService:_unloadLevel()

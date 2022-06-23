@@ -31,7 +31,7 @@
       <OptionalCoordinateFrame name="WorldPivotData">
         <CFrame>
           <X>-52.09961</X>
-          <Y>85.79117</Y>
+          <Y>85.79126</Y>
           <Z>-1.1000977</Z>
           <R00>1</R00>
           <R01>0</R01>
@@ -84,7 +84,7 @@
           <OptionalCoordinateFrame name="WorldPivotData">
             <CFrame>
               <X>-52.09961</X>
-              <Y>78.32721</Y>
+              <Y>78.3273</Y>
               <Z>169.50928</Z>
               <R00>1</R00>
               <R01>0</R01>
@@ -500,7 +500,7 @@
           <OptionalCoordinateFrame name="WorldPivotData">
             <CFrame>
               <X>-52.09961</X>
-              <Y>62.10268</Y>
+              <Y>62.102753</Y>
               <Z>-138.92139</Z>
               <R00>-1</R00>
               <R01>0</R01>
@@ -916,8 +916,8 @@
           <OptionalCoordinateFrame name="WorldPivotData">
             <CFrame>
               <X>-52.09961</X>
-              <Y>67.77271</Y>
-              <Z>-126.739746</Z>
+              <Y>79.84416</Y>
+              <Z>32.200195</Z>
               <R00>1</R00>
               <R01>0</R01>
               <R02>0</R02>
@@ -1903,8 +1903,8 @@
           <OptionalCoordinateFrame name="WorldPivotData">
             <CFrame>
               <X>-51.81543</X>
-              <Y>69.66925</Y>
-              <Z>141.06055</Z>
+              <Y>78.076</Y>
+              <Z>140.85547</Z>
               <R00>1</R00>
               <R01>0</R01>
               <R02>0</R02>

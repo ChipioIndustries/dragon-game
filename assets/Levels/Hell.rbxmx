@@ -30,7 +30,7 @@
       <BinaryString name="Tags"></BinaryString>
       <OptionalCoordinateFrame name="WorldPivotData">
         <CFrame>
-          <X>-4235.659</X>
+          <X>-4235.6597</X>
           <Y>306.78467</Y>
           <Z>-87.36133</Z>
           <R00>1</R00>
@@ -85,7 +85,7 @@
             <CFrame>
               <X>-4559.9004</X>
               <Y>97.19214</Y>
-              <Z>-142.1377</Z>
+              <Z>-142.1381</Z>
               <R00>1</R00>
               <R01>0</R01>
               <R02>0</R02>
@@ -1256,7 +1256,7 @@
           <OptionalCoordinateFrame name="WorldPivotData">
             <CFrame>
               <X>-4558.966</X>
-              <Y>61.290283</Y>
+              <Y>61.29017</Y>
               <Z>143.94727</Z>
               <R00>1</R00>
               <R01>0</R01>
@@ -1789,9 +1789,9 @@
                 <R02>0</R02>
                 <R10>0</R10>
                 <R11>0</R11>
-                <R12>0.9999999</R12>
+                <R12>1</R12>
                 <R20>0</R20>
-                <R21>-0.9999999</R21>
+                <R21>-1</R21>
                 <R22>0</R22>
               </CFrame>
             </OptionalCoordinateFrame>
@@ -2491,7 +2491,7 @@
           <BinaryString name="Tags"></BinaryString>
           <OptionalCoordinateFrame name="WorldPivotData">
             <CFrame>
-              <X>-4235.659</X>
+              <X>-4235.6597</X>
               <Y>306.78467</Y>
               <Z>-87.36133</Z>
               <R00>1</R00>
@@ -2852,7 +2852,7 @@
           <OptionalCoordinateFrame name="WorldPivotData">
             <CFrame>
               <X>-4717.743</X>
-              <Y>239.7644</Y>
+              <Y>239.76439</Y>
               <Z>-62.04883</Z>
               <R00>0.70710677</R00>
               <R01>0</R01>
@@ -3438,7 +3438,7 @@
           <OptionalCoordinateFrame name="WorldPivotData">
             <CFrame>
               <X>-4711.0313</X>
-              <Y>257.11426</Y>
+              <Y>257.1144</Y>
               <Z>367.40527</Z>
               <R00>0.7071066</R00>
               <R01>0</R01>

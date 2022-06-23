@@ -9,6 +9,9 @@ local CONFIG = Llama.Dictionary.throwOnNilIndex({
 		DefaultRetryDelay = 1;
 	};
 	Keys = {
+		Attributes = {
+			EnemyType = "DragonType"
+		};
 		DataStore = {
 			LiveOps = {
 				StoreName = "LiveOps";

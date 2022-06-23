@@ -23,7 +23,8 @@ local Responses = Llama.Dictionary.throwOnNilIndex({
 		}
 	};
 	Trigger = {
-		InvalidInstance = "Argument 2 must be a BasePart, got %s"
+		InvalidCallback = "Argument 1 must be a function, got %s";
+		InvalidInstance = "Argument 2 must be a BasePart, got %s";
 	};
 	Enemy = {
 		NoEnemyRoot = "Enemy %s lacks a valid root part"

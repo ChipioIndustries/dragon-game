@@ -7,7 +7,8 @@ local Trigger = {}
 Trigger.__index = Trigger
 
 function Trigger.new(callback, instance)
-	assert(instance:IsA("BasePart"), Responses.Trigger.InvalidInstance:format(instance.ClassName))
+	assert(typeof(callback) == "function", Responses.Trigger.InvalidCallback:format(typeof(callback)))
+	assert(typeof(instance) == "Instance" and instance:IsA("BasePart"), Responses.Trigger.InvalidInstance:format(instance.ClassName or typeof(instance)))
 	local self = setmetatable({
 		_callback = callback;
 		_instance = instance;
