@@ -27,6 +27,8 @@ function Enemy.new(enemyName)
 		_pathUpdateTimerConnection = nil;
 		_refreshRateChangedConnection = nil;
 		_humanoidMovedConnection = nil;
+		_stateChangedConnection = nil;
+		_walkingAnimationTrack = nil;
 	}, Enemy)
 
 	return self
@@ -63,14 +65,20 @@ function Enemy:_getRoot()
 end
 
 function Enemy:_getAnimator()
-	local root = getTaggedInstancesInDirectory(self._enemyInstance, CONFIG.Keys.Tags.Animator)[1]
-	assert(root, Responses.Enemy.NoEnemyAnimator:format(self._name))
-	return root
+	local animator = getTaggedInstancesInDirectory(self._enemyInstance, CONFIG.Keys.Tags.Animator)[1]
+	assert(animator, Responses.Enemy.NoEnemyAnimator:format(self._name))
+	return animator
 end
 
 function Enemy:_getPosition()
 	local root = self:_getRoot()
 	return root.CFrame
+end
+
+function Enemy:_getHumanoid()
+	local humanoid = getTaggedInstancesInDirectory(self._enemyInstance, CONFIG.Keys.Tags.Humanoid)[1]
+	assert(humanoid, Responses.Enemy.NoEnemyHumanoid:format(self._name))
+	return humanoid
 end
 
 function Enemy:_getPotentialTargets()
@@ -109,6 +117,7 @@ function Enemy:_playAnimation(animationId, looped)
 	local animationTrack = animator:LoadAnimation(animation)
 	animationTrack.Looped = looped or false
 	animationTrack:Play()
+	return animationTrack
 end
 
 function Enemy:_updatePath()
@@ -129,7 +138,7 @@ end
 
 function Enemy:_moveToNextWaypoint()
 	if self._waypoints[1] then
-		self._enemyInstance.Humanoid:MoveTo(self._waypoints[1].Position)
+		self:_getHumanoid():MoveTo(self._waypoints[1].Position)
 	end
 end
 
@@ -147,13 +156,24 @@ function Enemy:init(spawnPosition)
 	self._refreshRateChangedConnection = StoreService:getValueChangedSignal("liveOpsData.Enemy.PathRefreshRate"):connect(function(_newValue, _oldValue)
 		self:_updatePathTimerRefreshRate();
 	end)
-	self._humanoidMovedConnection = self._enemyInstance.Humanoid.MoveToFinished:Connect(function(reached)
+	self._humanoidMovedConnection = self:_getHumanoid().MoveToFinished:Connect(function(reached)
 		if reached then
 			table.remove(self._waypoints, 1)
 		end
 		self:_moveToNextWaypoint()
 	end)
 	self:_playAnimation(self:_getAnimations().Idle, true)
+	self._stateChangedConnection = self:_getHumanoid().StateChanged:Connect(function(_oldState, newState)
+		if newState == Enum.HumanoidStateType.Running then
+			local animationTrack = self:_playAnimation(self:_getAnimations().Walk)
+			self._walkingAnimationTrack = animationTrack
+		else
+			if self._walkingAnimationTrack then
+				self._walkingAnimationTrack:Stop()
+				self._walkingAnimationTrack = nil;
+			end
+		end
+	end)
 end
 
 function Enemy:destroy()
