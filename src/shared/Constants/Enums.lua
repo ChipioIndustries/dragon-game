@@ -10,7 +10,7 @@ local Enums = Llama.Dictionary.throwOnNilIndex({
 	};
 	AttackType = {
 		FireBreath = "FireBreath";
-		WingBeat = "WingBeat";
+		--WingBeat = "WingBeat";
 	}
 })
 

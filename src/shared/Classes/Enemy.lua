@@ -1,7 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local PathfindingService = game:GetService("PathfindingService")
-local ContentProvider = game:GetService("ContentProvider")
 local ServerStorage = game:GetService("ServerStorage")
+local Players = game:GetService("Players")
 
 local services = ReplicatedStorage.Services
 local StoreService = require(services.StoreService)
@@ -41,6 +41,8 @@ function Enemy.new(enemyName)
 		_damageCooldown = nil;
 		_damageCooldownChangedConnection = nil;
 		_damageObjects = {};
+		_fireBreathCheckTimer = {};
+		_fireBreathCheckTimerConnection = {};
 	}, Enemy)
 
 	return self
@@ -86,10 +88,20 @@ function Enemy:_getDamage()
 	return self:_getLiveOps().Damage
 end
 
+function Enemy:_getFireBreathCheckRate()
+	return self:_getLiveOps().FireBreathCheckRate
+end
+
 function Enemy:_getRoot()
 	local root = getTaggedInstancesInDirectory(self._enemyInstance, CONFIG.Keys.Tags.EnemyRoot)[1]
 	assert(root, Responses.Enemy.NoEnemyRoot:format(self._name))
 	return root
+end
+
+function Enemy:_getParticleEmitter()
+	local particleEmitter = getTaggedInstancesInDirectory(self._enemyInstance, CONFIG.Keys.Tags.ParticleEmitter)[1]
+	assert(particleEmitter, Responses.Enemy.NoParticleEmitter:format(self._name))
+	return particleEmitter
 end
 
 function Enemy:_getAnimator()
@@ -98,9 +110,50 @@ function Enemy:_getAnimator()
 	return animator
 end
 
+function Enemy:_getTongue()
+	local tongue = getTaggedInstancesInDirectory(self._enemyInstance, CONFIG.Keys.Tags.Tongue)[1]
+	assert(tongue, Responses.Enemy.NoTongue:format(self._name))
+	return tongue
+end
+
 function Enemy:_getPosition()
 	local root = self:_getRoot()
 	return root.CFrame
+end
+
+function Enemy:_damageFacingPlayers()
+	local tongue = self:_getTongue()
+	local origin = tongue.Position
+	local target = tongue.CFrame * Vector3.new(0, 0, -self:_getLiveOps().FireBreath.Distance)
+	local yNormalizedTarget = Vector3.new(target.X, origin.Y, target.Z)
+	local direction = yNormalizedTarget - origin
+	local raycastParams = RaycastParams.new()
+	local players = PlayerService:getPlayers()
+
+	local whitelist = {}
+	for _, player in ipairs(players) do
+		if player.Character then
+			for _, element in ipairs(player.Character:GetChildren()) do
+				if element:IsA("BasePart") then
+					table.insert(whitelist, element)
+				end
+			end
+		end
+	end
+	raycastParams.FilterDescendantsInstances = whitelist
+	raycastParams.FilterType = Enum.RaycastFilterType.Whitelist
+
+	local raycastResult = workspace:Raycast(origin, direction, raycastParams)
+	local hit = raycastResult and raycastResult.Instance
+	if hit then
+		local player = Players:GetPlayerFromCharacter(hit.Parent)
+		local humanoid = hit.Parent:FindFirstChild("Humanoid")
+		if player and humanoid then
+			self._damageCooldown:try(function()
+				humanoid:TakeDamage(self:_getDamage())
+			end)
+		end
+	end
 end
 
 function Enemy:_getHumanoid()
@@ -157,7 +210,7 @@ function Enemy:_updatePath()
 		end)
 		if success and path.Status == Enum.PathStatus.Success then
 			self._waypoints = path:GetWaypoints()
-			self:_moveToNextWaypoint()
+			--self:_moveToNextWaypoint()
 		elseif path.Status ~= Enum.PathStatus.NoPath then
 			warn(errorMessage, path.Status)
 		end
@@ -170,15 +223,39 @@ function Enemy:_moveToNextWaypoint()
 	end
 end
 
+function Enemy:FireBreath(animationTrack)
+	self:_enableFireBreath()
+	task.wait(1) -- let the animation run for a bit
+	animationTrack:Stop()
+	self:_disableFireBreath()
+end
+
+function Enemy:_enableFireBreath()
+	local particleEmitter = self:_getParticleEmitter()
+	local liveOps = self:_getLiveOps().FireBreath
+	particleEmitter.Speed = NumberRange.new(liveOps.Speed)
+	particleEmitter.Lifetime = NumberRange.new(liveOps.Distance / liveOps.Speed)
+	particleEmitter.Rate = liveOps.Rate
+	particleEmitter.Enabled = true
+	self._fireBreathCheckTimer:Start()
+end
+
+function Enemy:_disableFireBreath()
+	local particleEmitter = self:_getParticleEmitter()
+	particleEmitter.Enabled = false
+	self._fireBreathCheckTimer:Stop()
+end
+
 function Enemy:_randomAttack()
 	local attackNames = {}
 	for attackName, _value in pairs(Enums.AttackType) do
 		table.insert(attackNames, attackName)
 	end
 	local attackName = attackNames[self._RNG:NextInteger(1, #attackNames)]
-	self:_playAnimation(self:_getAnimations()[attackName])
+	print(attackName)
+	local animationTrack = self:_playAnimation(self:_getAnimations()[attackName])
 	if self[attackName] then
-		self[attackName](self)
+		self[attackName](self, animationTrack)
 	end
 end
 
@@ -237,6 +314,10 @@ function Enemy:init(spawnPosition)
 		local newDamageObject = DamageObject.new(damagePart, self:_getDamage(), self._damageCooldown)
 		table.insert(self._damageObjects, newDamageObject)
 	end
+	self._fireBreathCheckTimer = Timer.new(self:_getFireBreathCheckRate())
+	self._fireBreathCheckTimerConnection = self._fireBreathCheckTimer.Tick:Connect(function()
+		self:_damageFacingPlayers()
+	end)
 end
 
 function Enemy:destroy()
@@ -246,6 +327,7 @@ function Enemy:destroy()
 	self._damageCooldownChangedConnection:disconnect()
 	self._humanoidMovedConnection:Disconnect()
 	self._enemyInstance:Destroy()
+	self._fireBreathCheckTimerConnection:Disconnect()
 	for _, damageObject in ipairs(self._damageObjects) do
 		damageObject:destroy()
 	end

@@ -5,13 +5,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Llama = require(ReplicatedStorage.Packages.Llama)
 
 local StaticLiveOpsData = Llama.Dictionary.throwOnNilIndex({
-	Animations = {
-		Death = 9966955888;
-		FireBreath = 9966952928;
-		Idle = 9966954638;
-		Walk = 9966951173;
-		WingBeat = 9966957583;
-	};
 	LiveOps = {
 		RefreshRate = 5;
 		Retries = 3;
@@ -22,14 +15,25 @@ local StaticLiveOpsData = Llama.Dictionary.throwOnNilIndex({
 		Lighting = {};
 	};
 	Enemy = {
-		PathRefreshRate = 0.5;
+		PathRefreshRate = 1;
 		EyesightDistance = 50;
+		AttackDistance = 16;
+		SecondsPerAttack = 3;
+		DamageCooldown = 1;
+		Damage = 25;
 		Pathfinding = {
 			AgentRadius = 6;
 			AgentHeight = 5;
 			AgentCanJump = false;
 			WaypointSpacing = nil;
-		}
+		};
+		Animations = {
+			Death = 9966955888;
+			FireBreath = 9966952928;
+			Idle = 9966954638;
+			Walk = 9966951173;
+			WingBeat = 9966957583;
+		};
 	};
 	Levels = {
 		Archipelago = {
@@ -68,12 +72,13 @@ game:GetService("DataStoreService"):GetDataStore("LiveOps"):SetAsync("LiveOpsDat
 		Lighting = {};
 	};
 	Enemy = {
-		PathRefreshRate = 0.5;
+		PathRefreshRate = 1;
 		EyesightDistance = 50;
-		AttackDistance = 16;
+		AttackDistance = 18;
 		SecondsPerAttack = 3;
 		DamageCooldown = 1;
 		Damage = 25;
+		FireBreathCheckRate = 0.1;
 		Pathfinding = {
 			AgentRadius = 6;
 			AgentHeight = 5;
@@ -86,6 +91,11 @@ game:GetService("DataStoreService"):GetDataStore("LiveOps"):SetAsync("LiveOpsDat
 			Idle = 9966954638;
 			Walk = 9966951173;
 			WingBeat = 9966957583;
+		};
+		FireBreath = {
+			Rate = 400;
+			Speed = 50;
+			Distance = 18;
 		};
 	};
 	Levels = {

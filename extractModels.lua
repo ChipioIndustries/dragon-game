@@ -14,3 +14,4 @@ end
 
 extractDirectory(ServerStorage.Assets.Levels, "assets/Levels/")
 extractDirectory(ServerStorage.Assets.Dragons, "assets/Dragons/")
+extractDirectory(ServerStorage.Assets.Dragons, "assets/Weapons/")

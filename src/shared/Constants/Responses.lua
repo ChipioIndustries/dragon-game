@@ -31,6 +31,8 @@ local Responses = Llama.Dictionary.throwOnNilIndex({
 		NoEnemyAnimator = "Enemy %s lacks a valid animator";
 		BadAnimationId = "Animation ID must be a number, got %s";
 		NoEnemyHumanoid = "Enemy %s lacks a valid humanoid";
+		NoParticleEmitter = "Enemy %s lacks a valid particle emitter";
+		NoTongue = "Enemy %s lacks a valid tongue";
 	}
 })
 

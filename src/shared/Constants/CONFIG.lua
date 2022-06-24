@@ -31,6 +31,8 @@ local CONFIG = Llama.Dictionary.throwOnNilIndex({
 			Animator = "Animator";
 			Humanoid = "Humanoid";
 			DamageObject = "DamageObject";
+			ParticleEmitter = "ParticleEmitter";
+			Tongue = "Tongue";
 		};
 	};
 	LevelOrder = {
