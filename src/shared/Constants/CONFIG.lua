@@ -30,6 +30,7 @@ local CONFIG = Llama.Dictionary.throwOnNilIndex({
 			EnemyRoot = "EnemyRoot";
 			Animator = "Animator";
 			Humanoid = "Humanoid";
+			DamageObject = "DamageObject";
 		};
 	};
 	LevelOrder = {

@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local PathfindingService = game:GetService("PathfindingService")
+local ContentProvider = game:GetService("ContentProvider")
 local ServerStorage = game:GetService("ServerStorage")
 
 local services = ReplicatedStorage.Services
@@ -8,10 +9,15 @@ local PlayerService = require(services.PlayerService)
 
 local enemyAssets = ServerStorage.Assets.Dragons
 
+local classes = ReplicatedStorage.Classes
+local Cooldown = require(classes.Cooldown)
+local DamageObject = require(classes.DamageObject)
+
 local Timer = require(ReplicatedStorage.Packages.Timer)
 
 local constants = ReplicatedStorage.Constants
 local CONFIG = require(constants.CONFIG)
+local Enums = require(constants.Enums)
 local Responses = require(constants.Responses)
 
 local getTaggedInstancesInDirectory = require(ReplicatedStorage.Utilities.Selectors.getTaggedInstancesInDirectory)
@@ -22,6 +28,7 @@ Enemy.__index = Enemy
 function Enemy.new(enemyName)
 	local self = setmetatable({
 		_name = enemyName;
+		_RNG = Random.new();
 		_enemyInstance = nil;
 		_pathUpdateTimer = nil;
 		_pathUpdateTimerConnection = nil;
@@ -29,6 +36,11 @@ function Enemy.new(enemyName)
 		_humanoidMovedConnection = nil;
 		_stateChangedConnection = nil;
 		_walkingAnimationTrack = nil;
+		_attackTimer = nil;
+		_attackTimerConnection = nil;
+		_damageCooldown = nil;
+		_damageCooldownChangedConnection = nil;
+		_damageObjects = {};
 	}, Enemy)
 
 	return self
@@ -56,6 +68,22 @@ end
 
 function Enemy:_updatePathTimerRefreshRate()
 	self._pathUpdateTimer.Interval = self:_getPathRefreshRate()
+end
+
+function Enemy:_getAttackRate()
+	return self:_getLiveOps().SecondsPerAttack
+end
+
+function Enemy:_getAttackDistance()
+	return self:_getLiveOps().AttackDistance
+end
+
+function Enemy:_getDamageCooldown()
+	return self:_getLiveOps().DamageCooldown
+end
+
+function Enemy:_getDamage()
+	return self:_getLiveOps().Damage
 end
 
 function Enemy:_getRoot()
@@ -142,6 +170,27 @@ function Enemy:_moveToNextWaypoint()
 	end
 end
 
+function Enemy:_randomAttack()
+	local attackNames = {}
+	for attackName, _value in pairs(Enums.AttackType) do
+		table.insert(attackNames, attackName)
+	end
+	local attackName = attackNames[self._RNG:NextInteger(1, #attackNames)]
+	self:_playAnimation(self:_getAnimations()[attackName])
+	if self[attackName] then
+		self[attackName](self)
+	end
+end
+
+function Enemy:_attemptRandomAttack()
+	local target, targetDistance = self:_getTarget()
+	if target then
+		if targetDistance <= self:_getAttackDistance() then
+			self:_randomAttack()
+		end
+	end
+end
+
 function Enemy:init(spawnPosition)
 	local enemyInstance = enemyAssets[self._name]:Clone()
 	enemyInstance.Parent = workspace
@@ -174,13 +223,32 @@ function Enemy:init(spawnPosition)
 			end
 		end
 	end)
+	self._attackTimer = Timer.new(self:_getAttackRate())
+	self._attackTimerConnection = self._attackTimer.Tick:Connect(function()
+		self:_attemptRandomAttack()
+	end)
+	self._attackTimer:Start()
+	self._damageCooldown = Cooldown.new(self:_getDamageCooldown())
+	self._damageCooldownChangedConnection = StoreService:getValueChangedSignal("liveOpsData.Enemy.DamageCooldown"):connect(function(newValue, _oldValue)
+		self._damageCooldown:setDuration(newValue);
+	end)
+	local damageParts = getTaggedInstancesInDirectory(self._enemyInstance, CONFIG.Keys.Tags.DamageObject)
+	for _, damagePart in ipairs(damageParts) do
+		local newDamageObject = DamageObject.new(damagePart, self:_getDamage(), self._damageCooldown)
+		table.insert(self._damageObjects, newDamageObject)
+	end
 end
 
 function Enemy:destroy()
 	self._pathUpdateTimerConnection:Disconnect()
+	self._attackTimerConnection:Disconnect()
 	self._refreshRateChangedConnection:disconnect()
+	self._damageCooldownChangedConnection:disconnect()
 	self._humanoidMovedConnection:Disconnect()
 	self._enemyInstance:Destroy()
+	for _, damageObject in ipairs(self._damageObjects) do
+		damageObject:destroy()
+	end
 end
 
 return Enemy

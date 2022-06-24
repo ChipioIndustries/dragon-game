@@ -70,6 +70,10 @@ game:GetService("DataStoreService"):GetDataStore("LiveOps"):SetAsync("LiveOpsDat
 	Enemy = {
 		PathRefreshRate = 0.5;
 		EyesightDistance = 50;
+		AttackDistance = 16;
+		SecondsPerAttack = 3;
+		DamageCooldown = 1;
+		Damage = 25;
 		Pathfinding = {
 			AgentRadius = 6;
 			AgentHeight = 5;
