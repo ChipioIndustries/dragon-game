@@ -252,7 +252,6 @@ function Enemy:_randomAttack()
 		table.insert(attackNames, attackName)
 	end
 	local attackName = attackNames[self._RNG:NextInteger(1, #attackNames)]
-	print(attackName)
 	local animationTrack = self:_playAnimation(self:_getAnimations()[attackName])
 	if self[attackName] then
 		self[attackName](self, animationTrack)
