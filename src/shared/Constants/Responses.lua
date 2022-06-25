@@ -36,6 +36,7 @@ local Responses = Llama.Dictionary.throwOnNilIndex({
 		NoTongue = "Enemy %s lacks a valid tongue";
 	};
 	NoTaggedInstance = "No instance with tag %s descending from %s";
+	InvalidMaidTask = "Invalid task %s, must be a function or a class with a destroy method";
 })
 
 return Responses
