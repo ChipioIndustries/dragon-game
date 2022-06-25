@@ -33,7 +33,11 @@ local CONFIG = Llama.Dictionary.throwOnNilIndex({
 			DamageObject = "DamageObject";
 			ParticleEmitter = "ParticleEmitter";
 			Tongue = "Tongue";
+			Blade = "Blade";
+			Handle = "Handle";
+			Weapon = "Weapon";
 		};
+		ToolAttachmentName = "RightGripAttachment";
 	};
 	LevelOrder = {
 		"Archipelago";

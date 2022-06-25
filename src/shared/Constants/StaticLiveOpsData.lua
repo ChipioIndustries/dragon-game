@@ -17,10 +17,11 @@ local StaticLiveOpsData = Llama.Dictionary.throwOnNilIndex({
 	Enemy = {
 		PathRefreshRate = 1;
 		EyesightDistance = 50;
-		AttackDistance = 16;
+		AttackDistance = 18;
 		SecondsPerAttack = 3;
 		DamageCooldown = 1;
 		Damage = 25;
+		FireBreathCheckRate = 0.1;
 		Pathfinding = {
 			AgentRadius = 6;
 			AgentHeight = 5;
@@ -34,6 +35,26 @@ local StaticLiveOpsData = Llama.Dictionary.throwOnNilIndex({
 			Walk = 9966951173;
 			WingBeat = 9966957583;
 		};
+		FireBreath = {
+			Rate = 400;
+			Speed = 50;
+			Distance = 18;
+		};
+	};
+	Player = {
+		Animations = {
+			Swing = 10015552104;
+			Drop = 10015590832;
+		}
+	};
+	Weapons = {
+		Damage = {
+			Bat = 10;
+			WoodenSword = 25;
+			MetalSword = 50;
+			GoldenSword = 100;
+		};
+		SwingCooldown = 1;
 	};
 	Levels = {
 		Archipelago = {
@@ -97,6 +118,21 @@ game:GetService("DataStoreService"):GetDataStore("LiveOps"):SetAsync("LiveOpsDat
 			Speed = 50;
 			Distance = 18;
 		};
+	};
+	Player = {
+		Animations = {
+			Swing = 10015552104;
+			Drop = 10015590832;
+		}
+	};
+	Weapons = {
+		Damage = {
+			Bat = 10;
+			WoodenSword = 25;
+			MetalSword = 50;
+			GoldenSword = 100;
+		};
+		SwingCooldown = 1;
 	};
 	Levels = {
 		Archipelago = {

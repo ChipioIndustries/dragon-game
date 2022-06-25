@@ -15,6 +15,7 @@ local Responses = Llama.Dictionary.throwOnNilIndex({
 		InvalidLiveOpsType = "LiveOps data must be a table, got %s";
 		InvalidLevelIndex = "Level index is not valid";
 		InvalidSpawnPosition = "Position must be a CFrame, got %s";
+		InvalidWeapon = "%s is not a valid weapon name";
 	};
 	Selectors = {
 		getTaggedInstancesInDirectory = {

@@ -11,7 +11,13 @@ local Enums = Llama.Dictionary.throwOnNilIndex({
 	AttackType = {
 		FireBreath = "FireBreath";
 		WingBeat = "WingBeat";
-	}
+	};
+	Weapon = {
+		Bat = "Bat";
+		WoodenSword = "WoodenSword";
+		MetalSword = "MetalSword";
+		GoldenSword = "GoldenSword";
+	};
 })
 
 return Enums

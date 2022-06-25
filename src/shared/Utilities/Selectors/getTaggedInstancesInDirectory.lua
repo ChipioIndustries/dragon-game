@@ -6,8 +6,8 @@ local Responses = require(ReplicatedStorage.Constants.Responses)
 local function getTaggedInstancesInDirectory(instance, tag)
 	assert(typeof(instance) == "Instance", Responses.Selectors.getTaggedInstancesInDirectory.InvalidInstance:format(typeof(instance)))
 	assert(typeof(tag) == "string", Responses.Selectors.getTaggedInstancesInDirectory.InvalidTag:format(typeof(tag)))
-	local taggedInstances = CollectionService:GetTagged(tag)
 	local result = {}
+	local taggedInstances = CollectionService:GetTagged(tag)
 	for _, taggedInstance in ipairs(taggedInstances) do
 		if taggedInstance:IsDescendantOf(instance) then
 			table.insert(result, taggedInstance)
