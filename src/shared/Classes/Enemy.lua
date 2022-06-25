@@ -20,7 +20,9 @@ local CONFIG = require(constants.CONFIG)
 local Enums = require(constants.Enums)
 local Responses = require(constants.Responses)
 
-local getTaggedInstancesInDirectory = require(ReplicatedStorage.Utilities.Selectors.getTaggedInstancesInDirectory)
+local selectors = ReplicatedStorage.Utilities.Selectors
+local getTaggedInstancesInDirectory = require(selectors.getTaggedInstancesInDirectory)
+local getFirstTaggedInstance = require(selectors.getFirstTaggedInstance)
 
 local Enemy = {}
 Enemy.__index = Enemy
@@ -48,77 +50,65 @@ function Enemy.new(enemyName)
 	return self
 end
 
-function Enemy:_getPathRefreshRate()
-	return self:_getLiveOps().PathRefreshRate
+function Enemy:init(spawnPosition)
+	local enemyInstance = enemyAssets[self._name]:Clone()
+	enemyInstance.Parent = workspace
+	self._enemyInstance = enemyInstance
+	self:_getRoot().CFrame = spawnPosition
+	self._pathUpdateTimer = Timer.new(self:_getLiveOps().PathRefreshRate)
+	self:_updatePathTimerRefreshRate()
+	self._pathUpdateTimerConnection = self._pathUpdateTimer.Tick:Connect(function()
+		self:_updatePath()
+	end)
+	self._pathUpdateTimer:Start()
+	self._refreshRateChangedConnection = StoreService:getValueChangedSignal("liveOpsData.Enemy.PathRefreshRate"):connect(function(_newValue, _oldValue)
+		self:_updatePathTimerRefreshRate();
+	end)
+	self._humanoidMovedConnection = self:_getHumanoid().MoveToFinished:Connect(function(reached)
+		if reached then
+			table.remove(self._waypoints, 1)
+		end
+		self:_moveToNextWaypoint()
+	end)
+	self:_playAnimation(self:_getAnimations().Idle, true)
+	self._stateChangedConnection = self:_getHumanoid().StateChanged:Connect(function(_oldState, newState)
+		if newState == Enum.HumanoidStateType.Running then
+			local animationTrack = self:_playAnimation(self:_getAnimations().Walk)
+			self._walkingAnimationTrack = animationTrack
+		else
+			if self._walkingAnimationTrack then
+				self._walkingAnimationTrack:Stop()
+				self._walkingAnimationTrack = nil;
+			end
+		end
+	end)
+	self._attackTimer = Timer.new(self:_getLiveOps().SecondsPerAttack)
+	self._attackTimerConnection = self._attackTimer.Tick:Connect(function()
+		self:_attemptRandomAttack()
+	end)
+	self._attackTimer:Start()
+	self._damageCooldown = Cooldown.new(self:_getLiveOps().DamageCooldown)
+	self._damageCooldownChangedConnection = StoreService:getValueChangedSignal("liveOpsData.Enemy.DamageCooldown"):connect(function(newValue, _oldValue)
+		self._damageCooldown:setDuration(newValue);
+	end)
+	local damageParts = getTaggedInstancesInDirectory(self._enemyInstance, CONFIG.Keys.Tags.DamageObject)
+	for _, damagePart in ipairs(damageParts) do
+		local newDamageObject = DamageObject.new(damagePart, self:_getDamage(), self._damageCooldown)
+		table.insert(self._damageObjects, newDamageObject)
+	end
+	self._fireBreathCheckTimer = Timer.new(self:_getLiveOps().FireBreathCheckRate)
+	self._fireBreathCheckTimerConnection = self._fireBreathCheckTimer.Tick:Connect(function()
+		self:_damageFacingPlayers()
+	end)
 end
 
-function Enemy:_getPathfindingConfiguration()
-	return self:_getLiveOps().Pathfinding
-end
-
-function Enemy:_getEyesightDistance()
-	return self:_getLiveOps().EyesightDistance
-end
-
-function Enemy:_getAnimations()
-	return self:_getLiveOps().Animations
-end
-
-function Enemy:_getLiveOps()
-	return StoreService:getState().liveOpsData.Enemy
-end
-
-function Enemy:_updatePathTimerRefreshRate()
-	self._pathUpdateTimer.Interval = self:_getPathRefreshRate()
-end
-
-function Enemy:_getAttackRate()
-	return self:_getLiveOps().SecondsPerAttack
-end
-
-function Enemy:_getAttackDistance()
-	return self:_getLiveOps().AttackDistance
-end
-
-function Enemy:_getDamageCooldown()
-	return self:_getLiveOps().DamageCooldown
-end
-
-function Enemy:_getDamage()
-	return self:_getLiveOps().Damage
-end
-
-function Enemy:_getFireBreathCheckRate()
-	return self:_getLiveOps().FireBreathCheckRate
-end
-
-function Enemy:_getRoot()
-	local root = getTaggedInstancesInDirectory(self._enemyInstance, CONFIG.Keys.Tags.EnemyRoot)[1]
-	assert(root, Responses.Enemy.NoEnemyRoot:format(self._name))
-	return root
-end
-
-function Enemy:_getParticleEmitter()
-	local particleEmitter = getTaggedInstancesInDirectory(self._enemyInstance, CONFIG.Keys.Tags.ParticleEmitter)[1]
-	assert(particleEmitter, Responses.Enemy.NoParticleEmitter:format(self._name))
-	return particleEmitter
-end
-
-function Enemy:_getAnimator()
-	local animator = getTaggedInstancesInDirectory(self._enemyInstance, CONFIG.Keys.Tags.Animator)[1]
-	assert(animator, Responses.Enemy.NoEnemyAnimator:format(self._name))
-	return animator
-end
-
-function Enemy:_getTongue()
-	local tongue = getTaggedInstancesInDirectory(self._enemyInstance, CONFIG.Keys.Tags.Tongue)[1]
-	assert(tongue, Responses.Enemy.NoTongue:format(self._name))
-	return tongue
-end
-
-function Enemy:_getPosition()
-	local root = self:_getRoot()
-	return root.CFrame
+function Enemy:_attemptRandomAttack()
+	local target, targetDistance = self:_getTarget()
+	if target then
+		if targetDistance <= self:_getLiveOps().AttackDistance then
+			self:_randomAttack()
+		end
+	end
 end
 
 function Enemy:_damageFacingPlayers()
@@ -156,10 +146,56 @@ function Enemy:_damageFacingPlayers()
 	end
 end
 
+function Enemy:_disableFireBreath()
+	local particleEmitter = self:_getParticleEmitter()
+	particleEmitter.Enabled = false
+	self._fireBreathCheckTimer:Stop()
+end
+
+function Enemy:_enableFireBreath()
+	local particleEmitter = self:_getParticleEmitter()
+	local liveOps = self:_getLiveOps().FireBreath
+	particleEmitter.Speed = NumberRange.new(liveOps.Speed)
+	particleEmitter.Lifetime = NumberRange.new(liveOps.Distance / liveOps.Speed)
+	particleEmitter.Rate = liveOps.Rate
+	particleEmitter.Enabled = true
+	self._fireBreathCheckTimer:Start()
+end
+
+function Enemy:FireBreath(animationTrack)
+	self:_enableFireBreath()
+	task.wait(1) -- let the animation run for a bit
+	animationTrack:Stop()
+	self:_disableFireBreath()
+end
+
+function Enemy:_getAnimations()
+	return self:_getLiveOps().Animations
+end
+
+function Enemy:_getAnimator()
+	return getFirstTaggedInstance(self._enemyInstance, CONFIG.Keys.Tags.Animator)
+end
+
+function Enemy:_getDamage()
+	return self:_getLiveOps().Damage
+end
+
 function Enemy:_getHumanoid()
-	local humanoid = getTaggedInstancesInDirectory(self._enemyInstance, CONFIG.Keys.Tags.Humanoid)[1]
-	assert(humanoid, Responses.Enemy.NoEnemyHumanoid:format(self._name))
-	return humanoid
+	return getFirstTaggedInstance(self._enemyInstance, CONFIG.Keys.Tags.Humanoid)
+end
+
+function Enemy:_getLiveOps()
+	return StoreService:getState().liveOpsData.Enemy
+end
+
+function Enemy:_getParticleEmitter()
+	return getFirstTaggedInstance(self._enemyInstance, CONFIG.Keys.Tags.ParticleEmitter)
+end
+
+function Enemy:_getPosition()
+	local root = self:_getRoot()
+	return root.CFrame
 end
 
 function Enemy:_getPotentialTargets()
@@ -175,11 +211,15 @@ function Enemy:_getPotentialTargets()
 	return humanoidRootParts
 end
 
+function Enemy:_getRoot()
+	return getFirstTaggedInstance(self._enemyInstance, CONFIG.Keys.Tags.EnemyRoot)
+end
+
 function Enemy:_getTarget()
 	local potentialTargets = self:_getPotentialTargets()
 	local position = self:_getPosition().Position
 	local closestTarget
-	local closestDistance = self:_getEyesightDistance()
+	local closestDistance = self:_getLiveOps().EyesightDistance
 	for _index, potentialTarget in ipairs(potentialTargets) do
 		local distance = (potentialTarget.Position - position).magnitude
 		if distance < closestDistance then
@@ -188,6 +228,16 @@ function Enemy:_getTarget()
 		end
 	end
 	return closestTarget, closestDistance
+end
+
+function Enemy:_getTongue()
+	return getFirstTaggedInstance(self._enemyInstance, CONFIG.Keys.Tags.Tongue)
+end
+
+function Enemy:_moveToNextWaypoint()
+	if self._waypoints[1] then
+		self:_getHumanoid():MoveTo(self._waypoints[1].Position)
+	end
 end
 
 function Enemy:_playAnimation(animationId, looped)
@@ -199,51 +249,6 @@ function Enemy:_playAnimation(animationId, looped)
 	animationTrack.Looped = looped or false
 	animationTrack:Play()
 	return animationTrack
-end
-
-function Enemy:_updatePath()
-	local target = self:_getTarget()
-	if target then
-		local path = PathfindingService:CreatePath(self:_getPathfindingConfiguration())
-		local success, errorMessage = pcall(function()
-			path:ComputeAsync(self:_getPosition().Position, target.Position)
-		end)
-		if success and path.Status == Enum.PathStatus.Success then
-			self._waypoints = path:GetWaypoints()
-			--self:_moveToNextWaypoint()
-		elseif path.Status ~= Enum.PathStatus.NoPath then
-			warn(errorMessage, path.Status)
-		end
-	end
-end
-
-function Enemy:_moveToNextWaypoint()
-	if self._waypoints[1] then
-		self:_getHumanoid():MoveTo(self._waypoints[1].Position)
-	end
-end
-
-function Enemy:FireBreath(animationTrack)
-	self:_enableFireBreath()
-	task.wait(1) -- let the animation run for a bit
-	animationTrack:Stop()
-	self:_disableFireBreath()
-end
-
-function Enemy:_enableFireBreath()
-	local particleEmitter = self:_getParticleEmitter()
-	local liveOps = self:_getLiveOps().FireBreath
-	particleEmitter.Speed = NumberRange.new(liveOps.Speed)
-	particleEmitter.Lifetime = NumberRange.new(liveOps.Distance / liveOps.Speed)
-	particleEmitter.Rate = liveOps.Rate
-	particleEmitter.Enabled = true
-	self._fireBreathCheckTimer:Start()
-end
-
-function Enemy:_disableFireBreath()
-	local particleEmitter = self:_getParticleEmitter()
-	particleEmitter.Enabled = false
-	self._fireBreathCheckTimer:Stop()
 end
 
 function Enemy:_randomAttack()
@@ -258,65 +263,24 @@ function Enemy:_randomAttack()
 	end
 end
 
-function Enemy:_attemptRandomAttack()
-	local target, targetDistance = self:_getTarget()
+function Enemy:_updatePath()
+	local target = self:_getTarget()
 	if target then
-		if targetDistance <= self:_getAttackDistance() then
-			self:_randomAttack()
+		local path = PathfindingService:CreatePath(self:_getLiveOps().Pathfinding)
+		local success, errorMessage = pcall(function()
+			path:ComputeAsync(self:_getPosition().Position, target.Position)
+		end)
+		if success and path.Status == Enum.PathStatus.Success then
+			self._waypoints = path:GetWaypoints()
+			--self:_moveToNextWaypoint()
+		elseif path.Status ~= Enum.PathStatus.NoPath then
+			warn(errorMessage, path.Status)
 		end
 	end
 end
 
-function Enemy:init(spawnPosition)
-	local enemyInstance = enemyAssets[self._name]:Clone()
-	enemyInstance.Parent = workspace
-	self._enemyInstance = enemyInstance
-	self:_getRoot().CFrame = spawnPosition
-	self._pathUpdateTimer = Timer.new(self:_getPathRefreshRate())
-	self:_updatePathTimerRefreshRate()
-	self._pathUpdateTimerConnection = self._pathUpdateTimer.Tick:Connect(function()
-		self:_updatePath()
-	end)
-	self._pathUpdateTimer:Start()
-	self._refreshRateChangedConnection = StoreService:getValueChangedSignal("liveOpsData.Enemy.PathRefreshRate"):connect(function(_newValue, _oldValue)
-		self:_updatePathTimerRefreshRate();
-	end)
-	self._humanoidMovedConnection = self:_getHumanoid().MoveToFinished:Connect(function(reached)
-		if reached then
-			table.remove(self._waypoints, 1)
-		end
-		self:_moveToNextWaypoint()
-	end)
-	self:_playAnimation(self:_getAnimations().Idle, true)
-	self._stateChangedConnection = self:_getHumanoid().StateChanged:Connect(function(_oldState, newState)
-		if newState == Enum.HumanoidStateType.Running then
-			local animationTrack = self:_playAnimation(self:_getAnimations().Walk)
-			self._walkingAnimationTrack = animationTrack
-		else
-			if self._walkingAnimationTrack then
-				self._walkingAnimationTrack:Stop()
-				self._walkingAnimationTrack = nil;
-			end
-		end
-	end)
-	self._attackTimer = Timer.new(self:_getAttackRate())
-	self._attackTimerConnection = self._attackTimer.Tick:Connect(function()
-		self:_attemptRandomAttack()
-	end)
-	self._attackTimer:Start()
-	self._damageCooldown = Cooldown.new(self:_getDamageCooldown())
-	self._damageCooldownChangedConnection = StoreService:getValueChangedSignal("liveOpsData.Enemy.DamageCooldown"):connect(function(newValue, _oldValue)
-		self._damageCooldown:setDuration(newValue);
-	end)
-	local damageParts = getTaggedInstancesInDirectory(self._enemyInstance, CONFIG.Keys.Tags.DamageObject)
-	for _, damagePart in ipairs(damageParts) do
-		local newDamageObject = DamageObject.new(damagePart, self:_getDamage(), self._damageCooldown)
-		table.insert(self._damageObjects, newDamageObject)
-	end
-	self._fireBreathCheckTimer = Timer.new(self:_getFireBreathCheckRate())
-	self._fireBreathCheckTimerConnection = self._fireBreathCheckTimer.Tick:Connect(function()
-		self:_damageFacingPlayers()
-	end)
+function Enemy:_updatePathTimerRefreshRate()
+	self._pathUpdateTimer.Interval = self:_getLiveOps().PathRefreshRate
 end
 
 function Enemy:destroy()

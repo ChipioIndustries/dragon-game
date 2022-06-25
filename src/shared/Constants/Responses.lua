@@ -34,7 +34,8 @@ local Responses = Llama.Dictionary.throwOnNilIndex({
 		NoEnemyHumanoid = "Enemy %s lacks a valid humanoid";
 		NoParticleEmitter = "Enemy %s lacks a valid particle emitter";
 		NoTongue = "Enemy %s lacks a valid tongue";
-	}
+	};
+	NoTaggedInstance = "No instance with tag %s descending from %s";
 })
 
 return Responses

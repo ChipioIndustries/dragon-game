@@ -18,15 +18,6 @@ function Trigger.new(callback, instance)
 	return self
 end
 
-function Trigger:activate()
-	self:_callback()
-	self:destroy()
-end
-
-function Trigger:destroy()
-	self._touchedConnection:Disconnect()
-end
-
 function Trigger:init()
 	self._touchedConnection = self._instance.Touched:Connect(function(hit)
 		local player = Players:GetPlayerFromCharacter(hit.Parent)
@@ -34,6 +25,15 @@ function Trigger:init()
 			self:activate()
 		end
 	end)
+end
+
+function Trigger:activate()
+	self:_callback()
+	self:destroy()
+end
+
+function Trigger:destroy()
+	self._touchedConnection:Disconnect()
 end
 
 return Trigger

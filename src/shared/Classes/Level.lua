@@ -25,10 +25,6 @@ function Level.new(levelService, levelTemplate)
 	return self
 end
 
-function Level:finish()
-	self._levelService:nextLevel()
-end
-
 function Level:init()
 	-- copy level template into Workspace
 	local newLevel = self._levelTemplate:Clone()
@@ -52,6 +48,10 @@ function Level:init()
 
 	-- respawn players
 	PlayerService:respawnAllPlayers()
+end
+
+function Level:finish()
+	self._levelService:nextLevel()
 end
 
 function Level:getSpawnPosition()

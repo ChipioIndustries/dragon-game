@@ -8,6 +8,8 @@ local Actions = Llama.Dictionary.throwOnNilIndex({
 	setLevel = "setLevel";
 	setSpawnPosition = "setSpawnPosition";
 	setWeapon = "setWeapon";
+	setLastDamage = "setLastDamage";
+	setLastSwing = "setLastSwing";
 })
 
 return Actions
