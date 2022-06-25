@@ -39,14 +39,14 @@ function LootDropService:clear()
 end
 
 function LootDropService:_cacheLootObject(loot)
-	table.insert(self.lootCache, loot)
+	table.insert(self._lootCache, loot)
 end
 
 function LootDropService:dropCoin(position)
 	local newCoin = Coin.new(position)
 	local maxVelocity = StoreService:getState().liveOpsData.Coin.MaxVelocity
 	local mass = newCoin._instance.AssemblyMass
-	newCoin._instance:ApplyImpulse(RandomVector:get(maxVelocity.Translation) * mass)
+	-- newCoin._instance:ApplyImpulse(RandomVector:get(maxVelocity.Translation) * mass)
 	newCoin._instance:ApplyAngularImpulse(RandomVector:get(maxVelocity.Rotation) * mass)
 	self:_cacheLootObject(newCoin)
 end
@@ -56,11 +56,13 @@ function LootDropService:dropWeapon(weaponName, position)
 end
 
 function LootDropService:randomDrop(position, coinCount)
-	local randomWeaponName = Enums.Weapon[self._RNG:NextInteger(1, Llama.Dictionary.count(Enums.Weapon))]
+	coinCount = coinCount or 5
+	local randomWeaponName = Llama.Dictionary.keys(Enums.Weapon)[self._RNG:NextInteger(1, Llama.Dictionary.count(Enums.Weapon))]
 	self:dropWeapon(randomWeaponName, position)
-	for i = 1, #coinCount do
-		self:dropCoin(position)
+	for i = 1, coinCount do
+		local coinPosition = position + RandomVector:noY(StoreService:getState().liveOpsData.Coin.SpawnPositionVariation)
+		self:dropCoin(coinPosition)
 	end
 end
 
-return LootDropService
+return LootDropService.new()

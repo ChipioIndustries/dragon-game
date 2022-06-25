@@ -30,7 +30,7 @@ function Trigger:init()
 end
 
 function Trigger:activate(player)
-	self:_callback()
+	self:_callback(player)
 	self:destroy()
 end
 

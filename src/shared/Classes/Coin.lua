@@ -14,15 +14,18 @@ local Trigger = require(classes.Trigger)
 local assets = ServerStorage.Assets
 local coinAsset = assets.Loot.Coin
 
-local Coin = {}
+local Coin = setmetatable({}, Trigger)
 Coin.__index = Coin
 
 function Coin.new(position)
 	local instance = coinAsset:Clone()
 	instance.Position = position
+	instance.Parent = workspace
 	local self = setmetatable(Trigger.new(function(_player)
 		StoreService:dispatch(incrementCoins(1))
 	end, instance, true), Coin)
+
+	self:init()
 
 	return self
 end
