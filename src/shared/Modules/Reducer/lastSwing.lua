@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local constants = ReplicatedStorage.Constants
 local Actions = require(constants.Actions)
 
-local function lastSwing(state, action)
+local function lastSwingReducer(state, action)
 	state = state or 0
 	if action.type == Actions.setLastSwing then
 		return action.timestamp
@@ -11,4 +11,4 @@ local function lastSwing(state, action)
 	return state
 end
 
-return lastSwing
+return lastSwingReducer

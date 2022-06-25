@@ -10,14 +10,20 @@ local StoreService = require(services.StoreService)
 
 local constants = ReplicatedStorage.Constants
 local CONFIG = require(constants.CONFIG)
+local RemoteNames = require(constants.RemoteNames)
 
 local classes = ReplicatedStorage.Classes
 local Cooldown = require(classes.Cooldown)
+
+local packages = ReplicatedStorage.Packages
+local Remotes = require(packages.Remotes)
 
 local utilities = ReplicatedStorage.Utilities
 local getTaggedInstancesInDirectory = require(utilities.Selectors.getTaggedInstancesInDirectory)
 local weldTool = require(utilities.weldTool)
 local playAnimation = require(utilities.playAnimation)
+
+local swingRemote = Remotes:getEventAsync(RemoteNames.Swing)
 
 local WeaponService = {}
 WeaponService.__index = WeaponService
@@ -62,8 +68,8 @@ function WeaponService:init()
 		self._userInputConnection = UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
 			if not gameProcessedEvent then
 				if input.UserInputType == Enum.UserInputType.MouseButton1 then
-					game:GetService("CollectionService"):AddTag(self:_getPlayerWeapon(self._player).Handle, "YEEHAW")
 					self._swingCooldown:try(function()
+						swingRemote:FireServer()
 						playAnimation(self._player, self._getAnimations().Swing)
 					end)
 				end
@@ -96,11 +102,6 @@ if RunService:IsServer() then
 		local handleWeld = Instance.new("WeldConstraint", handle)
 		handleWeld.Part1 = handle
 		handleWeld.Part0 = characterAttachment.Parent
-		task.spawn(function()
-			while task.wait(0.5) do
-				print(game:GetService("CollectionService"):HasTag(handle, "YEEHAW"))
-			end
-		end)
 	end
 
 	function WeaponService:_updateWeapons(instant)

@@ -1,8 +1,13 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
 
 local CONFIG = require(ReplicatedStorage.Constants.CONFIG)
 
-local PlayerService = require(ReplicatedStorage.Services.PlayerService)
+local sharedServices = ReplicatedStorage.Services
+local PlayerService = require(sharedServices.PlayerService)
+
+local serverServices = ServerScriptService.Services
+local LootDropService = require(serverServices.LootDropService)
 
 local getTaggedInstancesInDirectory = require(ReplicatedStorage.Utilities.Selectors.getTaggedInstancesInDirectory)
 
@@ -65,6 +70,7 @@ function Level:destroy()
 		enemy:destroy()
 	end
 	self._levelEndTrigger:destroy()
+	LootDropService:clear()
 end
 
 return Level

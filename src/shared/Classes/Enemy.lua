@@ -1,11 +1,17 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local CollectionService = game:GetService("CollectionService")
 local PathfindingService = game:GetService("PathfindingService")
-local ServerStorage = game:GetService("ServerStorage")
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
+local ServerStorage = game:GetService("ServerStorage")
 
 local services = ReplicatedStorage.Services
-local StoreService = require(services.StoreService)
 local PlayerService = require(services.PlayerService)
+local StoreService = require(services.StoreService)
+
+local serverServices = ServerScriptService.Services
+local LootDropService = require(serverServices.LootDropService)
+local WeaponDamageService = require(serverServices.WeaponDamageService)
 
 local enemyAssets = ServerStorage.Assets.Dragons
 
@@ -30,6 +36,8 @@ Enemy.__index = Enemy
 
 function Enemy.new(enemyName)
 	local self = setmetatable({
+		dead = false;
+
 		_maid = Maid.new();
 		_name = enemyName;
 		_RNG = Random.new();
@@ -38,7 +46,6 @@ function Enemy.new(enemyName)
 		_damageCooldown = nil;
 		_enemyInstance = nil;
 		_fireBreathCheckTimer = nil;
-		_health = nil;
 		_pathUpdateTimer = nil;
 		_walkingAnimationTrack = nil;
 
@@ -57,7 +64,6 @@ function Enemy:init(spawnPosition)
 	local enemyInstance = enemyAssets[self._name]:Clone()
 	enemyInstance.Parent = workspace
 	self._enemyInstance = enemyInstance
-	self._root.CFrame = spawnPosition
 
 	-- components
 	self._animator = getFirstTaggedInstance(self._enemyInstance, CONFIG.Keys.Tags.Animator)
@@ -65,6 +71,9 @@ function Enemy:init(spawnPosition)
 	self._particleEmitter = getFirstTaggedInstance(self._enemyInstance, CONFIG.Keys.Tags.ParticleEmitter)
 	self._root = getFirstTaggedInstance(self._enemyInstance, CONFIG.Keys.Tags.EnemyRoot)
 	self._tongue = getFirstTaggedInstance(self._enemyInstance, CONFIG.Keys.Tags.Tongue)
+
+	-- set enemy position
+	self._root.CFrame = spawnPosition
 
 	-- pathfinding
 	self._pathUpdateTimer = Timer.new(self:_getLiveOps().PathRefreshRate)
@@ -108,6 +117,21 @@ function Enemy:init(spawnPosition)
 		self._maid:giveTask(DamageObject.new(damagePart, self:_getDamage(), self._damageCooldown))
 	end
 
+	-- receive damage
+	for _, instance in ipairs(self._enemyInstance:GetDescendants()) do
+		if instance:IsA("BasePart") then
+			self._maid:giveTask(instance.Touched:Connect(function(hit)
+				if CollectionService:HasTag(hit, CONFIG.Keys.Tags.Blade) then
+					WeaponDamageService:tryDamage(function()
+						local weaponName = hit.Parent.Name
+						self._humanoid:TakeDamage(StoreService:getState().liveOpsData.Weapons.Damage[weaponName])
+					end)
+				end
+			end))
+		end
+	end
+	self:_bindSignalToMethod(self._humanoid.Died, self._kill)
+
 	-- fire breath query timer
 	self._fireBreathCheckTimer = Timer.new(self:_getLiveOps().FireBreathCheckRate)
 	self:_bindSignalToMethod(self._fireBreathCheckTimer.Tick, self._damageFacingPlayers)
@@ -123,10 +147,18 @@ function Enemy:_attemptRandomAttack()
 end
 
 function Enemy:_bindSignalToMethod(signal, method)
-	local connect = signal.connect or signal.Connect
-	self._maid:giveTask(connect(signal, function(...)
-		method(self, ...)
-	end))
+	local connection
+	if typeof(signal) == "RBXScriptSignal" then
+		connection = signal:Connect(function(...)
+			method(self, ...)
+		end)
+	else
+		local connect = signal.Connect or signal.connect
+		connection = connect(signal, function(...)
+			method(self, ...)
+		end)
+	end
+	self._maid:giveTask(connection)
 end
 
 function Enemy:_damageFacingPlayers()
@@ -229,6 +261,21 @@ function Enemy:_getTarget()
 	return closestTarget, closestDistance
 end
 
+function Enemy:_kill()
+	self.dead = true;
+	for _, track in ipairs(self._animator:GetPlayingAnimationTracks()) do
+		track:Stop()
+	end
+	self._root.Anchored = true
+	local deathAnimationTrack = self:_playAnimation(self:_getAnimations().Death, false)
+	self._attackTimer:Stop()
+	self._fireBreathCheckTimer:Stop()
+	self._pathUpdateTimer:Stop()
+	deathAnimationTrack.Stopped:Wait()
+	LootDropService:randomDrop(self:_getPosition().Position)
+	self:destroy()
+end
+
 function Enemy:_moveToNextWaypoint()
 	if self._waypoints[1] then
 		self._humanoid:MoveTo(self._waypoints[1].Position)
@@ -266,7 +313,7 @@ function Enemy:_updatePath()
 		end)
 		if success and path.Status == Enum.PathStatus.Success then
 			self._waypoints = path:GetWaypoints()
-			-- self:_moveToNextWaypoint() TODO
+			self:_moveToNextWaypoint()
 		elseif path.Status ~= Enum.PathStatus.NoPath then
 			warn(errorMessage, path.Status)
 		end

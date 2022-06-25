@@ -10,10 +10,10 @@ function Maid.new()
 	local self = setmetatable({
 		_tasks = {};
 		_SUPPORTED_METHODS = {
-			"destroy";
 			"Destroy";
-			"disconnect";
+			"destroy";
 			"Disconnect";
+			"disconnect";
 		};
 	}, Maid)
 

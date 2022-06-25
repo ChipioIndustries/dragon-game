@@ -10,6 +10,8 @@ local Actions = Llama.Dictionary.throwOnNilIndex({
 	setWeapon = "setWeapon";
 	setLastDamage = "setLastDamage";
 	setLastSwing = "setLastSwing";
+	incrementCoins = "incrementCoins";
+	decrementCoins = "decrementCoins";
 })
 
 return Actions

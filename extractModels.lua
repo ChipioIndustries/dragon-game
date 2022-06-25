@@ -12,6 +12,7 @@ local function extractDirectory(directory, target)
 	end
 end
 
-extractDirectory(ServerStorage.Assets.Levels, "assets/Levels/")
 extractDirectory(ServerStorage.Assets.Dragons, "assets/Dragons/")
+extractDirectory(ServerStorage.Assets.Levels, "assets/Levels/")
+extractDirectory(ServerStorage.Assets.Loot, "assets/Loot/")
 extractDirectory(ServerStorage.Assets.Weapons, "assets/Weapons/")

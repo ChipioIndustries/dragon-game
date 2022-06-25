@@ -28,7 +28,7 @@ function WeaponDamageService.new()
 end
 
 function WeaponDamageService:init()
-	self._swingRemoteConnection = swingRemote.OnServerEvent:Connect(function(_player)
+	self._swingRemoteConnection = swingRemote.OnServerEvent:connect(function(_player)
 		self:swing()
 	end)
 end

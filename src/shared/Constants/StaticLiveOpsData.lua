@@ -5,6 +5,12 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Llama = require(ReplicatedStorage.Packages.Llama)
 
 local StaticLiveOpsData = Llama.Dictionary.throwOnNilIndex({
+	Coin = {
+		MaxVelocity = {
+			Rotation = 0.3;
+			Translation = 0.3;
+		};
+	};
 	LiveOps = {
 		RefreshRate = 5;
 		Retries = 3;
