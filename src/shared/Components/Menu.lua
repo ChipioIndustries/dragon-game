@@ -21,9 +21,9 @@ function Menu:render()
 
 	return Roact.createElement("Frame", {
 		Size = UDim2.new(1, 0, 1, 0);
-		BackgroundColor3 = Color3.new(0, 0, 0);
+		BackgroundColor3 = Color3.new(0.2, 0.2, 0.2);
 		BorderSizePixel = 36;
-		BorderColor3 = Color3.new(0, 0, 0);
+		BorderColor3 = Color3.new(0.2, 0.2, 0.2);
 	}, {
 		Layout = Roact.createElement("UIListLayout", {
 			FillDirection = Enum.FillDirection.Vertical;

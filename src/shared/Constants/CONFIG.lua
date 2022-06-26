@@ -10,7 +10,8 @@ local CONFIG = Llama.Dictionary.throwOnNilIndex({
 	};
 	Keys = {
 		Attributes = {
-			EnemyType = "DragonType"
+			EnemyType = "DragonType";
+			Strength = "strength";
 		};
 		DataStore = {
 			LiveOps = {
@@ -36,6 +37,7 @@ local CONFIG = Llama.Dictionary.throwOnNilIndex({
 			Blade = "Blade";
 			Handle = "Handle";
 			Weapon = "Weapon";
+			StrengthDisplayTemplate = "StrengthDisplayTemplate";
 		};
 		ToolAttachmentName = "RightGripAttachment";
 	};

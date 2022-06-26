@@ -25,6 +25,7 @@ function Level.new(levelService, levelTemplate)
 		_levelEndTrigger = nil;
 		_loadedLevel = nil;
 		_enemies = {};
+		_completed = false;
 	}, Level)
 
 	return self
@@ -40,7 +41,8 @@ function Level:init()
 	local enemySpawns = getTaggedInstancesInDirectory(self._loadedLevel, CONFIG.Keys.Tags.EnemySpawn)
 	for _index, enemySpawn in ipairs(enemySpawns) do
 		local enemyName = enemySpawn:GetAttribute(CONFIG.Keys.Attributes.EnemyType)
-		local newEnemy = Enemy.new(enemyName)
+		local enemyStrength = enemySpawn:GetAttribute(CONFIG.Keys.Attributes.Strength)
+		local newEnemy = Enemy.new(enemyName, enemyStrength)
 		newEnemy:init(enemySpawn.CFrame)
 		table.insert(self._enemies, newEnemy)
 	end
@@ -55,8 +57,21 @@ function Level:init()
 	PlayerService:respawnAllPlayers()
 end
 
+function Level:_canFinish()
+	for _, enemy in ipairs(self._enemies) do
+		if not enemy.dead then
+			return false
+		end
+	end
+	return true
+end
+
 function Level:finish()
-	self._levelService:nextLevel()
+	if self:_canFinish() then
+		self._levelService:nextLevel()
+		return true
+	end
+	return false
 end
 
 function Level:getSpawnPosition()

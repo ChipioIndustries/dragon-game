@@ -23,6 +23,7 @@ function Coin.new(position)
 	instance.Parent = workspace
 	local self = setmetatable(Trigger.new(function(_player)
 		StoreService:dispatch(incrementCoins(1))
+		return true
 	end, instance, true), Coin)
 
 	self:init()

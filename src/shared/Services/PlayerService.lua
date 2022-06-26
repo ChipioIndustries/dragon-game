@@ -77,7 +77,9 @@ end
 if RunService:IsServer() then
 	function PlayerService:respawnAllPlayers()
 		for _, player in ipairs(self:getPlayers()) do
-			player:LoadCharacter()
+			task.spawn(function()
+				player:LoadCharacter()
+			end)
 		end
 	end
 end

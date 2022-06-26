@@ -28254,7 +28254,7 @@
         <Properties>
           <string name="Name">Part</string>
           <bool name="Anchored">true</bool>
-          <BinaryString name="AttributesSerialize">AQAAAAoAAABEcmFnb25UeXBlAgoAAABGaXJlRHJhZ29u</BinaryString>
+          <BinaryString name="AttributesSerialize">AgAAAAoAAABEcmFnb25UeXBlAgoAAABGaXJlRHJhZ29uCAAAAHN0cmVuZ3RoBgAAAAAAAPA/</BinaryString>
           <float name="BackParamA">-0.5</float>
           <float name="BackParamB">0.5</float>
           <token name="BackSurface">0</token>
@@ -28337,7 +28337,7 @@
           <float name="TopParamB">0.5</float>
           <token name="TopSurface">0</token>
           <token name="TopSurfaceInput">0</token>
-          <float name="Transparency">0</float>
+          <float name="Transparency">1</float>
           <Vector3 name="Velocity">
             <X>0</X>
             <Y>0</Y>
@@ -28349,7 +28349,7 @@
         <Properties>
           <string name="Name">Part</string>
           <bool name="Anchored">true</bool>
-          <BinaryString name="AttributesSerialize">AQAAAAoAAABEcmFnb25UeXBlAgoAAABGaXJlRHJhZ29u</BinaryString>
+          <BinaryString name="AttributesSerialize">AgAAAAoAAABEcmFnb25UeXBlAgoAAABGaXJlRHJhZ29uCAAAAHN0cmVuZ3RoBgAAAAAAAPA/</BinaryString>
           <float name="BackParamA">-0.5</float>
           <float name="BackParamB">0.5</float>
           <token name="BackSurface">0</token>
@@ -28432,7 +28432,7 @@
           <float name="TopParamB">0.5</float>
           <token name="TopSurface">0</token>
           <token name="TopSurfaceInput">0</token>
-          <float name="Transparency">0</float>
+          <float name="Transparency">1</float>
           <Vector3 name="Velocity">
             <X>0</X>
             <Y>0</Y>
@@ -28444,7 +28444,7 @@
         <Properties>
           <string name="Name">Part</string>
           <bool name="Anchored">true</bool>
-          <BinaryString name="AttributesSerialize">AQAAAAoAAABEcmFnb25UeXBlAgoAAABGaXJlRHJhZ29u</BinaryString>
+          <BinaryString name="AttributesSerialize">AgAAAAoAAABEcmFnb25UeXBlAgoAAABGaXJlRHJhZ29uCAAAAHN0cmVuZ3RoBgAAAAAAAPA/</BinaryString>
           <float name="BackParamA">-0.5</float>
           <float name="BackParamB">0.5</float>
           <token name="BackSurface">0</token>
@@ -28527,7 +28527,7 @@
           <float name="TopParamB">0.5</float>
           <token name="TopSurface">0</token>
           <token name="TopSurfaceInput">0</token>
-          <float name="Transparency">0</float>
+          <float name="Transparency">1</float>
           <Vector3 name="Velocity">
             <X>0</X>
             <Y>0</Y>
@@ -28539,7 +28539,7 @@
         <Properties>
           <string name="Name">Part</string>
           <bool name="Anchored">true</bool>
-          <BinaryString name="AttributesSerialize">AQAAAAoAAABEcmFnb25UeXBlAgoAAABGaXJlRHJhZ29u</BinaryString>
+          <BinaryString name="AttributesSerialize">AgAAAAoAAABEcmFnb25UeXBlAgoAAABGaXJlRHJhZ29uCAAAAHN0cmVuZ3RoBgAAAAAAAPA/</BinaryString>
           <float name="BackParamA">-0.5</float>
           <float name="BackParamB">0.5</float>
           <token name="BackSurface">0</token>
@@ -28622,7 +28622,7 @@
           <float name="TopParamB">0.5</float>
           <token name="TopSurface">0</token>
           <token name="TopSurfaceInput">0</token>
-          <float name="Transparency">0</float>
+          <float name="Transparency">1</float>
           <Vector3 name="Velocity">
             <X>0</X>
             <Y>0</Y>
@@ -28634,7 +28634,7 @@
         <Properties>
           <string name="Name">Part</string>
           <bool name="Anchored">true</bool>
-          <BinaryString name="AttributesSerialize">AQAAAAoAAABEcmFnb25UeXBlAgoAAABGaXJlRHJhZ29u</BinaryString>
+          <BinaryString name="AttributesSerialize">AgAAAAoAAABEcmFnb25UeXBlAgoAAABGaXJlRHJhZ29uCAAAAHN0cmVuZ3RoBgAAAAAAAPA/</BinaryString>
           <float name="BackParamA">-0.5</float>
           <float name="BackParamB">0.5</float>
           <token name="BackSurface">0</token>
@@ -28717,7 +28717,7 @@
           <float name="TopParamB">0.5</float>
           <token name="TopSurface">0</token>
           <token name="TopSurfaceInput">0</token>
-          <float name="Transparency">0</float>
+          <float name="Transparency">1</float>
           <Vector3 name="Velocity">
             <X>0</X>
             <Y>0</Y>
@@ -28729,7 +28729,7 @@
         <Properties>
           <string name="Name">Part</string>
           <bool name="Anchored">true</bool>
-          <BinaryString name="AttributesSerialize">AQAAAAoAAABEcmFnb25UeXBlAgoAAABGaXJlRHJhZ29u</BinaryString>
+          <BinaryString name="AttributesSerialize">AgAAAAoAAABEcmFnb25UeXBlAgoAAABGaXJlRHJhZ29uCAAAAHN0cmVuZ3RoBgAAAAAAAPA/</BinaryString>
           <float name="BackParamA">-0.5</float>
           <float name="BackParamB">0.5</float>
           <token name="BackSurface">0</token>
@@ -28812,7 +28812,7 @@
           <float name="TopParamB">0.5</float>
           <token name="TopSurface">0</token>
           <token name="TopSurfaceInput">0</token>
-          <float name="Transparency">0</float>
+          <float name="Transparency">1</float>
           <Vector3 name="Velocity">
             <X>0</X>
             <Y>0</Y>
@@ -28824,7 +28824,7 @@
         <Properties>
           <string name="Name">Part</string>
           <bool name="Anchored">true</bool>
-          <BinaryString name="AttributesSerialize">AQAAAAoAAABEcmFnb25UeXBlAgoAAABGaXJlRHJhZ29u</BinaryString>
+          <BinaryString name="AttributesSerialize">AgAAAAoAAABEcmFnb25UeXBlAgoAAABGaXJlRHJhZ29uCAAAAHN0cmVuZ3RoBgAAAAAAAABA</BinaryString>
           <float name="BackParamA">-0.5</float>
           <float name="BackParamB">0.5</float>
           <token name="BackSurface">0</token>
@@ -28907,7 +28907,7 @@
           <float name="TopParamB">0.5</float>
           <token name="TopSurface">0</token>
           <token name="TopSurfaceInput">0</token>
-          <float name="Transparency">0</float>
+          <float name="Transparency">1</float>
           <Vector3 name="Velocity">
             <X>0</X>
             <Y>0</Y>

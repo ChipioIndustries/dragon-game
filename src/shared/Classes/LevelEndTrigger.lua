@@ -7,7 +7,7 @@ LevelEndTrigger.__index = LevelEndTrigger
 
 function LevelEndTrigger.new(level, instance)
 	local function callback(_player)
-		level:finish()
+		return level:finish()
 	end
 
 	local self = setmetatable(Trigger.new(callback, instance), LevelEndTrigger)

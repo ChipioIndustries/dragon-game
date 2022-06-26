@@ -53,7 +53,7 @@ function Maid:destroy()
 		elseif taskType == "table" then
 			local destroy = self:_getMethod(givenTask)
 			if destroy then
-				destroy(givenTask)
+				pcall(destroy, givenTask)
 			end
 		elseif taskType == "RBXScriptConnection" and givenTask.Connected then
 			givenTask:Disconnect()

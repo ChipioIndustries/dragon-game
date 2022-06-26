@@ -34,13 +34,14 @@ local getFirstTaggedInstance = require(selectors.getFirstTaggedInstance)
 local Enemy = {}
 Enemy.__index = Enemy
 
-function Enemy.new(enemyName)
+function Enemy.new(enemyName, strength)
 	local self = setmetatable({
 		dead = false;
 
 		_maid = Maid.new();
 		_name = enemyName;
 		_RNG = Random.new();
+		_strength = strength;
 
 		_attackTimer = nil;
 		_damageCooldown = nil;
@@ -131,6 +132,17 @@ function Enemy:init(spawnPosition)
 		end
 	end
 	self:_bindSignalToMethod(self._humanoid.Died, self._kill)
+	local health = self._strength * self:_getLiveOps().HealthMultiplier
+	self._humanoid.MaxHealth = health
+	self._humanoid.Health = health
+
+	-- strength display
+	local diamondTemplate = getFirstTaggedInstance(self._enemyInstance, CONFIG.Keys.Tags.StrengthDisplayTemplate)
+	for _index = 1, self._strength do
+		local diamond = diamondTemplate:Clone()
+		diamond.Visible = true
+		diamond.Parent = diamondTemplate.Parent
+	end
 
 	-- fire breath query timer
 	self._fireBreathCheckTimer = Timer.new(self:_getLiveOps().FireBreathCheckRate)
@@ -222,7 +234,7 @@ function Enemy:_getAnimations()
 end
 
 function Enemy:_getDamage()
-	return self:_getLiveOps().Damage
+	return self:_getLiveOps().DamageMultiplier
 end
 
 function Enemy:_getLiveOps()

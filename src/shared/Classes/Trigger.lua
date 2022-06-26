@@ -15,6 +15,7 @@ function Trigger.new(callback, instance, destroyInstanceOnActivation)
 		_destroyInstanceOnActivation = destroyInstanceOnActivation;
 		_instance = instance;
 		_touchedConnection = nil;
+		_debounce = false;
 	}, Trigger)
 
 	return self
@@ -22,16 +23,22 @@ end
 
 function Trigger:init()
 	self._touchedConnection = self._instance.Touched:Connect(function(hit)
-		local player = Players:GetPlayerFromCharacter(hit.Parent)
-		if player then
-			self:activate(player)
+		if not self._debounce then
+			self._debounce = true
+			local player = Players:GetPlayerFromCharacter(hit.Parent)
+			if player then
+				self:activate(player)
+			end
+			self._debounce = false
 		end
 	end)
 end
 
 function Trigger:activate(player)
-	self:_callback(player)
-	self:destroy()
+	local success = self:_callback(player)
+	if success then
+		self:destroy()
+	end
 end
 
 function Trigger:destroy()

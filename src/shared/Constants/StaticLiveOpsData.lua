@@ -22,12 +22,13 @@ local StaticLiveOpsData = Llama.Dictionary.throwOnNilIndex({
 		Lighting = {};
 	};
 	Enemy = {
+		HealthMultiplier = 100;
 		PathRefreshRate = 1;
 		EyesightDistance = 50;
 		AttackDistance = 18;
 		SecondsPerAttack = 3;
 		DamageCooldown = 1;
-		Damage = 25;
+		DamageMultiplier = 10;
 		FireBreathCheckRate = 0.1;
 		Pathfinding = {
 			AgentRadius = 6;
@@ -107,12 +108,13 @@ game:GetService("DataStoreService"):GetDataStore("LiveOps"):SetAsync("LiveOpsDat
 		Lighting = {};
 	};
 	Enemy = {
+		HealthMultiplier = 100;
 		PathRefreshRate = 1;
 		EyesightDistance = 50;
 		AttackDistance = 18;
 		SecondsPerAttack = 3;
 		DamageCooldown = 1;
-		Damage = 25;
+		DamageMultiplier = 10;
 		FireBreathCheckRate = 0.1;
 		Pathfinding = {
 			AgentRadius = 6;
