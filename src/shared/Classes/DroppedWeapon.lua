@@ -30,8 +30,9 @@ function DroppedWeapon.new(weaponName, position)
 		_weaponName = weaponName;
 		_position = position;
 
-		_weapon = nil;
+		_collected = false;
 		_triggeredConnection = nil;
+		_weapon = nil;
 	}, DroppedWeapon)
 
 	return self
@@ -51,7 +52,8 @@ function DroppedWeapon:init()
 	prompt.Exclusivity = Enum.ProximityPromptExclusivity.OneGlobally
 	prompt.GamepadKeyCode = Enum.KeyCode.ButtonY
 	prompt.KeyboardKeyCode = Enum.KeyCode.E
-	prompt.ObjectText = ("%s - %d damage"):format(self._weaponName, 0)
+	local damagePerSwing = StoreService:getState().liveOpsData.Weapons.Damage[self._weaponName]
+	prompt.ObjectText = ("%s - %d damage"):format(self._weaponName, damagePerSwing)
 	prompt.Parent = self._weapon.PrimaryPart
 	self._triggeredConnection = prompt.Triggered:Connect(function(player)
 		self:_collect(player)
@@ -63,11 +65,14 @@ function DroppedWeapon:init()
 end
 
 function DroppedWeapon:_collect(_player)
-	local currentWeapon = StoreService:getState().weapon
-	StoreService:dispatch(setWeapon(self._weaponName))
-	WeaponService.WeaponSwap:wait()
-	LootDropService:dropWeapon(currentWeapon, self._weapon.PrimaryPart.CFrame)
-	self:destroy()
+	if not self._collected then
+		self._collected = true
+		local currentWeapon = StoreService:getState().weapon
+		StoreService:dispatch(setWeapon(self._weaponName))
+		WeaponService.WeaponSwap:wait()
+		LootDropService:dropWeapon(currentWeapon, self._weapon.PrimaryPart.CFrame)
+		self:destroy()
+	end
 end
 
 function DroppedWeapon:destroy()
