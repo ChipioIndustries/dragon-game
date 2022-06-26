@@ -3,7 +3,6 @@ local PathfindingService = game:GetService("PathfindingService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
-local ContentProvider = game:GetService("ContentProvider")
 local ServerStorage = game:GetService("ServerStorage")
 
 local services = ReplicatedStorage.Services
