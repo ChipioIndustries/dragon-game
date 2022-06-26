@@ -10,7 +10,7 @@ local function setLevel(level)
 	assert(getLevelNameByIndex(level), Responses.Actions.InvalidLevelIndex)
 	return {
 		type = Actions.setLevel;
-		data = level;
+		level = level;
 	}
 end
 

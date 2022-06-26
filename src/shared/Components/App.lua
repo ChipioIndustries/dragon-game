@@ -13,6 +13,7 @@ local Enums = require(constants.Enums)
 local components = ReplicatedStorage.Components
 local Menu = require(components.Menu)
 local HUD = require(components.HUD)
+local Cutscenes = require(components.Cutscenes)
 
 local App = Roact.Component:extend("App")
 
@@ -37,8 +38,11 @@ function App:render()
 			setEnvironment = setEnvironment;
 		})
 	elseif environment == Enums.GUIEnvironment.Gameplay then
-		component = Roact.createElement(HUD, {
-			setEnvironment = setEnvironment;
+		component = Roact.createFragment({
+			HUD = Roact.createElement(HUD, {
+				setEnvironment = setEnvironment;
+			});
+			Cutscenes = Roact.createElement(Cutscenes);
 		})
 	end
 

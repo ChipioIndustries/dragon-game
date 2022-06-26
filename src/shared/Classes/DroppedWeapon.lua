@@ -48,7 +48,6 @@ function DroppedWeapon:init()
 	-- setup proximity prompt
 	local prompt = Instance.new("ProximityPrompt")
 	prompt.ActionText = "Equip sword"
-	prompt.ClickablePrompt = true
 	prompt.Exclusivity = Enum.ProximityPromptExclusivity.OneGlobally
 	prompt.GamepadKeyCode = Enum.KeyCode.ButtonY
 	prompt.KeyboardKeyCode = Enum.KeyCode.E

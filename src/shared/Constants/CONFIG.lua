@@ -11,6 +11,8 @@ local CONFIG = Llama.Dictionary.throwOnNilIndex({
 	Keys = {
 		Attributes = {
 			EnemyType = "DragonType";
+			FieldOfView = "FOV";
+			KeyframeIndex = "KeyframeIndex";
 			Strength = "strength";
 		};
 		DataStore = {
@@ -25,19 +27,20 @@ local CONFIG = Llama.Dictionary.throwOnNilIndex({
 			RetryDelay = "LiveOpsRetryDelay";
 		};
 		Tags = {
-			EnemySpawn = "EnemySpawn";
-			LevelEnd = "LevelEnd";
-			PlayerSpawn = "PlayerSpawn";
-			EnemyRoot = "EnemyRoot";
 			Animator = "Animator";
-			Humanoid = "Humanoid";
-			DamageObject = "DamageObject";
-			ParticleEmitter = "ParticleEmitter";
-			Tongue = "Tongue";
 			Blade = "Blade";
+			CutsceneKeyframe = "CutsceneKeyframe";
+			DamageObject = "DamageObject";
+			EnemyRoot = "EnemyRoot";
+			EnemySpawn = "EnemySpawn";
 			Handle = "Handle";
-			Weapon = "Weapon";
+			Humanoid = "Humanoid";
+			LevelEnd = "LevelEnd";
+			ParticleEmitter = "ParticleEmitter";
+			PlayerSpawn = "PlayerSpawn";
 			StrengthDisplayTemplate = "StrengthDisplayTemplate";
+			Tongue = "Tongue";
+			Weapon = "Weapon";
 		};
 		ToolAttachmentName = "RightGripAttachment";
 	};

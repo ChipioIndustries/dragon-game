@@ -12,6 +12,12 @@ local StaticLiveOpsData = Llama.Dictionary.throwOnNilIndex({
 		};
 		SpawnPositionVariation = 8;
 	};
+	Cutscene = {
+		easingDirection = Enum.EasingDirection.InOut.Name;
+		easingStyle = Enum.EasingStyle.Sine.Name;
+		studsPerSecond = 40;
+		deathHeight = 20;
+	};
 	LiveOps = {
 		RefreshRate = 5;
 		Retries = 3;
@@ -98,6 +104,12 @@ game:GetService("DataStoreService"):GetDataStore("LiveOps"):SetAsync("LiveOpsDat
 			Translation = 10;
 		};
 		SpawnPositionVariation = 8;
+	};
+	Cutscene = {
+		easingDirection = Enum.EasingDirection.InOut.Name;
+		easingStyle = Enum.EasingStyle.Sine.Name;
+		studsPerSecond = 40;
+		deathHeight = 20;
 	};
 	LiveOps = {
 		RefreshRate = 5;

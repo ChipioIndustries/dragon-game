@@ -22,6 +22,10 @@ local Enums = Llama.Dictionary.throwOnNilIndex({
 		Menu = "Menu";
 		Gameplay = "Gameplay";
 	};
+	Cutscene = {
+		LevelIntro = "LevelIntro";
+		Death = "Death";
+	};
 })
 
 return Enums
