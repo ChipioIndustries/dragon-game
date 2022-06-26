@@ -46,6 +46,18 @@ local CONFIG = Llama.Dictionary.throwOnNilIndex({
 		"Volcano";
 		"Hell";
 	};
+	Interface = {
+		Defaults = {
+			Button = {
+				BackgroundColor = Color3.fromRGB(0, 120, 180);
+				Font = Enum.Font.GothamBlack;
+				TextColor = Color3.new(1, 1, 1);
+			};
+			Corner = {
+				Radius = UDim.new(0, 8);
+			};
+		};
+	};
 	DefaultSpawnPosition = CFrame.new(0, 0, 0);
 })
 
