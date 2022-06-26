@@ -3,6 +3,7 @@ local PathfindingService = game:GetService("PathfindingService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
+local ContentProvider = game:GetService("ContentProvider")
 local ServerStorage = game:GetService("ServerStorage")
 
 local services = ReplicatedStorage.Services
@@ -284,7 +285,8 @@ function Enemy:_kill()
 	self._fireBreathCheckTimer:Stop()
 	self._pathUpdateTimer:Stop()
 	deathAnimationTrack.Stopped:Wait()
-	LootDropService:randomDrop(self:_getPosition().Position)
+	local coinDropAmount = self:_getLiveOps().CoinMultiplier * self._strength
+	LootDropService:randomDrop(self:_getPosition().Position, coinDropAmount)
 	self:destroy()
 end
 

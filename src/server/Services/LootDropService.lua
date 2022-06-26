@@ -59,7 +59,6 @@ function LootDropService:dropWeapon(weaponName, position)
 end
 
 function LootDropService:randomDrop(position, coinCount)
-	coinCount = coinCount or 5
 	local randomWeaponName = Llama.Dictionary.keys(Enums.Weapon)[self._RNG:NextInteger(1, Llama.Dictionary.count(Enums.Weapon))]
 	self:dropWeapon(randomWeaponName, position)
 	for _index = 1, coinCount do
