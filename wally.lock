@@ -5,12 +5,12 @@ registry = "test"
 [[package]]
 name = "chipioindustries/dragon-game"
 version = "0.1.0"
-dependencies = [["Flipper", "reselim/flipper@2.0.0"], ["LeakyBucket", "chipioindustries/leaky-bucket@1.0.1"], ["Llama", "chipioindustries/llama@1.2.4"], ["Maid", "flamenco687/maid@3.2.2"], ["Promise", "evaera/promise@4.0.0"], ["Remotes", "chipioindustries/remotes@1.0.1"], ["ReplicationMiddleware", "chipioindustries/replication-middleware@1.0.0"], ["Roact", "roblox/roact@1.4.2"], ["RoactRodux", "chipioindustries/roact-rodux@1.0.4"], ["Rodux", "chipioindustries/rodux@3.0.4"], ["Signal", "chipioindustries/signal@1.0.3"], ["Timer", "sleitnick/timer@1.1.1"]]
+dependencies = [["Flipper", "reselim/flipper@2.0.0"], ["LeakyBucket", "chipioindustries/leaky-bucket@1.0.1"], ["Llama", "chipioindustries/llama@1.2.4"], ["Maid", "flamenco687/maid@3.2.2"], ["Promise", "evaera/promise@4.0.0"], ["Remotes", "chipioindustries/remotes@1.0.1"], ["ReplicationMiddleware", "chipioindustries/replication-middleware@1.0.0"], ["Roact", "roblox/roact@1.4.2"], ["RoactRodux", "chipioindustries/roact-rodux@1.0.4"], ["Rodux", "chipioindustries/rodux@3.0.4"], ["Signal", "chipioindustries/signal@1.1.1"], ["Timer", "sleitnick/timer@1.1.1"]]
 
 [[package]]
 name = "chipioindustries/leaky-bucket"
 version = "1.0.1"
-dependencies = [["Llama", "freddylist/llama@1.1.1"], ["Signal", "chipioindustries/signal@1.0.3"]]
+dependencies = [["Llama", "freddylist/llama@1.1.1"], ["Signal", "chipioindustries/signal@1.1.1"]]
 
 [[package]]
 name = "chipioindustries/llama"
@@ -25,7 +25,7 @@ dependencies = [["Llama", "freddylist/llama@1.1.1"]]
 [[package]]
 name = "chipioindustries/remotes"
 version = "1.0.1"
-dependencies = [["Llama", "freddylist/llama@1.1.1"], ["Rapscallion", "chipioindustries/rapscallion@1.0.4"], ["Signal", "chipioindustries/signal@1.0.3"]]
+dependencies = [["Llama", "freddylist/llama@1.1.1"], ["Rapscallion", "chipioindustries/rapscallion@1.0.4"], ["Signal", "chipioindustries/signal@1.1.1"]]
 
 [[package]]
 name = "chipioindustries/replication-middleware"
@@ -44,7 +44,7 @@ dependencies = []
 
 [[package]]
 name = "chipioindustries/signal"
-version = "1.0.3"
+version = "1.1.1"
 dependencies = []
 
 [[package]]

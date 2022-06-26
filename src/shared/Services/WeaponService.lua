@@ -17,6 +17,7 @@ local Cooldown = require(classes.Cooldown)
 
 local packages = ReplicatedStorage.Packages
 local Remotes = require(packages.Remotes)
+local Signal = require(packages.Signal)
 
 local utilities = ReplicatedStorage.Utilities
 local getTaggedInstancesInDirectory = require(utilities.Selectors.getTaggedInstancesInDirectory)
@@ -34,6 +35,7 @@ function WeaponService.new()
 		_storeChangedConnection = nil;
 		_playerAddedConnection = nil;
 		_weapons = nil;
+		WeaponSwap = nil;
 		-- client
 		_userInputConnection = nil;
 		_player = nil;
@@ -46,7 +48,7 @@ end
 function WeaponService:init()
 	if RunService:IsServer() then
 		self._weapons = ServerStorage.Assets.Weapons
-		self._storeChangedConnection = StoreService:getValueChangedSignal("weapon"):connect(function(newValue, oldValue)
+		self._storeChangedConnection = StoreService:getValueChangedSignal("weapon"):connect(function(_newValue, _oldValue)
 			task.spawn(function()
 				self:_updateWeapons(false)
 			end)
@@ -62,12 +64,19 @@ function WeaponService:init()
 				self:_updateWeapons(true)
 			end)
 		end)
+		self.WeaponSwap = Signal.new()
 	elseif RunService:IsClient() then
 		self._player = Players.LocalPlayer
 		self._swingCooldown = Cooldown.new(StoreService:getState().liveOpsData.Weapons.SwingCooldown)
 		self._userInputConnection = UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
 			if not gameProcessedEvent then
-				if input.UserInputType == Enum.UserInputType.MouseButton1 then
+				if
+					input.UserInputType == Enum.UserInputType.MouseButton1
+					or (
+						input.UserInputType == Enum.UserInputType.Gamepad1
+						and input.KeyCode == Enum.KeyCode.ButtonR1
+					)
+				then
 					self._swingCooldown:try(function()
 						swingRemote:FireServer()
 						playAnimation(self._player, self._getAnimations().Swing)
@@ -99,9 +108,15 @@ if RunService:IsServer() then
 		local characterAttachment = character:FindFirstChild(CONFIG.Keys.ToolAttachmentName, true)
 		newWeapon.PrimaryPart = handle
 		newWeapon:SetPrimaryPartCFrame(characterAttachment.WorldCFrame)
-		local handleWeld = Instance.new("WeldConstraint", handle)
+		local handleWeld = Instance.new("WeldConstraint")
 		handleWeld.Part1 = handle
 		handleWeld.Part0 = characterAttachment.Parent
+		handleWeld.Parent = handle
+		for _, instance in ipairs(newWeapon:GetDescendants()) do
+			if instance:IsA("BasePart") then
+				instance.CanCollide = false
+			end
+		end
 	end
 
 	function WeaponService:_updateWeapons(instant)
@@ -120,6 +135,7 @@ if RunService:IsServer() then
 						end
 						oldWeapon:Destroy()
 					end
+					self.WeaponSwap:fire()
 					self:_giveWeapon(player.Character, weaponName)
 				end
 			end

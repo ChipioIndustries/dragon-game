@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local classes = ReplicatedStorage.Classes
 local Coin = require(classes.Coin)
+local DroppedWeapon
 
 local services = ReplicatedStorage.Services
 local StoreService = require(services.StoreService)
@@ -28,7 +29,7 @@ function LootDropService.new()
 end
 
 function LootDropService:init()
-
+	DroppedWeapon = require(classes.DroppedWeapon)
 end
 
 function LootDropService:clear()
@@ -46,20 +47,22 @@ function LootDropService:dropCoin(position)
 	local newCoin = Coin.new(position)
 	local maxVelocity = StoreService:getState().liveOpsData.Coin.MaxVelocity
 	local mass = newCoin._instance.AssemblyMass
-	-- newCoin._instance:ApplyImpulse(RandomVector:get(maxVelocity.Translation) * mass)
+	newCoin._instance:ApplyImpulse(RandomVector:noY(maxVelocity.Translation) * mass)
 	newCoin._instance:ApplyAngularImpulse(RandomVector:get(maxVelocity.Rotation) * mass)
 	self:_cacheLootObject(newCoin)
 end
 
 function LootDropService:dropWeapon(weaponName, position)
-
+	local weapon = DroppedWeapon.new(weaponName, position)
+	weapon:init()
+	self:_cacheLootObject(weapon)
 end
 
 function LootDropService:randomDrop(position, coinCount)
 	coinCount = coinCount or 5
 	local randomWeaponName = Llama.Dictionary.keys(Enums.Weapon)[self._RNG:NextInteger(1, Llama.Dictionary.count(Enums.Weapon))]
 	self:dropWeapon(randomWeaponName, position)
-	for i = 1, coinCount do
+	for _index = 1, coinCount do
 		local coinPosition = position + RandomVector:noY(StoreService:getState().liveOpsData.Coin.SpawnPositionVariation)
 		self:dropCoin(coinPosition)
 	end

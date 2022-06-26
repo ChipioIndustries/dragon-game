@@ -25,7 +25,7 @@
         <Z>0</Z>
       </Vector3>
       <bool name="NeedsPivotMigration">false</bool>
-      <Ref name="PrimaryPart">null</Ref>
+      <Ref name="PrimaryPart">1</Ref>
       <int64 name="SourceAssetId">-1</int64>
       <BinaryString name="Tags">V2VhcG9u</BinaryString>
       <OptionalCoordinateFrame name="WorldPivotData">
@@ -45,7 +45,7 @@
         </CFrame>
       </OptionalCoordinateFrame>
     </Properties>
-    <Item class="Part" referent="1">
+    <Item class="Part" referent="2">
       <Properties>
         <string name="Name">Blade</string>
         <bool name="Anchored">false</bool>
@@ -140,7 +140,7 @@
         </Vector3>
       </Properties>
     </Item>
-    <Item class="Part" referent="2">
+    <Item class="Part" referent="1">
       <Properties>
         <string name="Name">Handle</string>
         <bool name="Anchored">false</bool>

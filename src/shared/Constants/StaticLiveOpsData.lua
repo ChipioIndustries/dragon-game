@@ -7,8 +7,8 @@ local Llama = require(ReplicatedStorage.Packages.Llama)
 local StaticLiveOpsData = Llama.Dictionary.throwOnNilIndex({
 	Coin = {
 		MaxVelocity = {
-			Rotation = 10;
-			Translation = 5;
+			Rotation = 5;
+			Translation = 10;
 		};
 		SpawnPositionVariation = 8;
 	};
@@ -92,8 +92,8 @@ return StaticLiveOpsData
 game:GetService("DataStoreService"):GetDataStore("LiveOps"):SetAsync("LiveOpsData", {
 	Coin = {
 		MaxVelocity = {
-			Rotation = 10;
-			Translation = 5;
+			Rotation = 5;
+			Translation = 10;
 		};
 		SpawnPositionVariation = 8;
 	};

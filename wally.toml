@@ -16,7 +16,7 @@ ReplicationMiddleware = "chipioindustries/replication-middleware@1.0.0"
 Roact = "roblox/roact@1.4.2"
 RoactRodux = "chipioindustries/roact-rodux@1.0.4"
 Rodux = "chipioindustries/rodux@3.0.4"
-Signal = "chipioindustries/signal@1.0.3"
+Signal = "chipioindustries/signal@1.1.1"
 Timer = "sleitnick/timer@1.1.1"
 
 [dev-dependencies]
