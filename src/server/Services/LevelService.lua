@@ -10,6 +10,7 @@ local constants = ReplicatedStorage.Constants
 local Responses = require(constants.Responses)
 local CONFIG = require(constants.CONFIG)
 
+local setLevel = require(ServerScriptService.Actions.setLevel)
 local incrementLevel = require(ServerScriptService.Actions.incrementLevel)
 
 local getLevelNameByIndex = require(ReplicatedStorage.Utilities.Selectors.getLevelNameByIndex)
@@ -39,7 +40,12 @@ function LevelService:getSpawnPosition()
 end
 
 function LevelService:nextLevel()
-	StoreService:dispatch(incrementLevel())
+	local currentLevel = StoreService:getState().level
+	if getLevelNameByIndex(currentLevel + 1) then
+		StoreService:dispatch(incrementLevel())
+	else
+		StoreService:dispatch(setLevel(1))
+	end
 end
 
 function LevelService:init()

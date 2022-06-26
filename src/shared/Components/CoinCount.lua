@@ -21,7 +21,7 @@ function CoinCount:render()
 end
 
 CoinCount = RoactRodux.connect(
-	function(state, props)
+	function(state, _props)
 		return {
 			coins = state.coins;
 		}

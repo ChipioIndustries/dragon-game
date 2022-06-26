@@ -24,7 +24,7 @@ function LevelName:render()
 end
 
 LevelName = RoactRodux.connect(
-	function(state, props)
+	function(state, _props)
 		return {
 			level = getLevelNameByIndex(state.level);
 		}
