@@ -7,7 +7,6 @@ realm = "shared"
 
 [dependencies]
 Flipper = "reselim/flipper@2.0.0"
-LeakyBucket = "chipioindustries/leaky-bucket@1.0.1"
 Llama = "chipioindustries/llama@1.2.4"
 Maid = "flamenco687/maid@3.2.2"
 Promise = "evaera/promise@4.0.0"
