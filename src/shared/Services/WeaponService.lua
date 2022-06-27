@@ -7,6 +7,7 @@ local Players = game:GetService("Players")
 local services = ReplicatedStorage.Services
 local PlayerService = require(services.PlayerService)
 local StoreService = require(services.StoreService)
+local SoundService = require(services.SoundService)
 
 local constants = ReplicatedStorage.Constants
 local CONFIG = require(constants.CONFIG)
@@ -77,9 +78,11 @@ function WeaponService:init()
 						and input.KeyCode == Enum.KeyCode.ButtonR1
 					)
 				then
+					local root = self._player.Character and self._player.Character:FindFirstChild("HumanoidRootPart")
 					self._swingCooldown:try(function()
 						swingRemote:FireServer()
 						playAnimation(self._player, self._getAnimations().Swing)
+						SoundService:play(StoreService:getState().liveOpsData.Sounds.Sword.Swing, root)
 					end)
 				end
 			end

@@ -8,6 +8,7 @@ local ServerStorage = game:GetService("ServerStorage")
 local services = ReplicatedStorage.Services
 local PlayerService = require(services.PlayerService)
 local StoreService = require(services.StoreService)
+local SoundService = require(services.SoundService)
 
 local serverServices = ServerScriptService.Services
 local LootDropService = require(serverServices.LootDropService)
@@ -126,6 +127,7 @@ function Enemy:init(spawnPosition)
 					WeaponDamageService:tryDamage(function()
 						local weaponName = hit.Parent.Name
 						self._humanoid:TakeDamage(StoreService:getState().liveOpsData.Weapons.Damage[weaponName])
+						SoundService:play(StoreService:getState().liveOpsData.Sounds.Sword.Hit, self._root)
 					end)
 				end
 			end))
@@ -220,6 +222,7 @@ function Enemy:_enableFireBreath()
 	particleEmitter.Rate = liveOps.Rate
 	particleEmitter.Enabled = true
 	self._fireBreathCheckTimer:Start()
+	SoundService:play(StoreService:getState().liveOpsData.Sounds.Enemy.FireBreath, self._root)
 end
 
 function Enemy:FireBreath(animationTrack)

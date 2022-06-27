@@ -5,6 +5,16 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Llama = require(ReplicatedStorage.Packages.Llama)
 
 local StaticLiveOpsData = Llama.Dictionary.throwOnNilIndex({
+	Sounds = {
+		Sword = {
+			Swing = 8680211166;
+			Hit = 7171761940;
+		};
+		Enemy = {
+			FireBreath = 6371871210;
+		};
+		CoinCollect = 3612595830;
+	};
 	Coin = {
 		MaxVelocity = {
 			Rotation = 5;
@@ -133,6 +143,16 @@ return StaticLiveOpsData
 
 --[[
 game:GetService("DataStoreService"):GetDataStore("LiveOps"):SetAsync("LiveOpsData", {
+	Sounds = {
+		Sword = {
+			Swing = 8680211166;
+			Hit = 7171761940;
+		};
+		Enemy = {
+			FireBreath = 6371871210;
+		};
+		CoinCollect = 3612595830;
+	};
 	Coin = {
 		MaxVelocity = {
 			Rotation = 5;

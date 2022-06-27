@@ -4,6 +4,7 @@ local ServerStorage = game:GetService("ServerStorage")
 
 local services = ReplicatedStorage.Services
 local StoreService = require(services.StoreService)
+local SoundService = require(services.SoundService)
 
 local actions = ServerScriptService.Actions
 local incrementCoins = require(actions.incrementCoins)
@@ -22,7 +23,12 @@ function Coin.new(position)
 	instance.Position = position
 	instance.Parent = workspace
 	local self = setmetatable(Trigger.new(function(_player)
+		local sound = SoundService:play(StoreService:getState().liveOpsData.Sounds.CoinCollect, instance)
 		StoreService:dispatch(incrementCoins(1))
+		instance.Transparency = 1
+		instance.CanCollide = false
+		instance.Anchored = true
+		sound.Ended:Wait()
 		return true
 	end, instance, true), Coin)
 
