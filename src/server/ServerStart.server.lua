@@ -5,6 +5,7 @@ local serverServices = ServerScriptService.Services
 local sharedServices = ReplicatedStorage.Services
 
 local LevelService = require(serverServices.LevelService)
+local LightingService = require(serverServices.LightingService)
 local LiveOpsService = require(serverServices.LiveOpsService)
 local LootDropService = require(serverServices.LootDropService)
 local PlayerService = require(sharedServices.PlayerService)
@@ -13,6 +14,7 @@ local WeaponService = require(sharedServices.WeaponService)
 local WeaponDamageService = require(serverServices.WeaponDamageService)
 
 LiveOpsService:init()
+LightingService:init()
 LevelService:init()
 SpawnService:init()
 WeaponService:init()

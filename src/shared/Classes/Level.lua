@@ -1,13 +1,16 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
+local Lighting = game:GetService("Lighting")
 
 local CONFIG = require(ReplicatedStorage.Constants.CONFIG)
 
 local sharedServices = ReplicatedStorage.Services
 local PlayerService = require(sharedServices.PlayerService)
+local StoreService = require(sharedServices.StoreService)
 
 local serverServices = ServerScriptService.Services
 local LootDropService = require(serverServices.LootDropService)
+local LightingService = require(serverServices.LightingService)
 
 local getTaggedInstancesInDirectory = require(ReplicatedStorage.Utilities.Selectors.getTaggedInstancesInDirectory)
 
@@ -26,6 +29,8 @@ function Level.new(levelService, levelTemplate)
 		_loadedLevel = nil;
 		_enemies = {};
 		_completed = false;
+		_skybox = nil;
+		_savedLightingSettings = {};
 	}, Level)
 
 	return self
@@ -36,6 +41,11 @@ function Level:init()
 	local newLevel = self._levelTemplate:Clone()
 	newLevel.Parent = workspace
 	self._loadedLevel = newLevel
+
+	-- load lighting settings
+	self._skybox = newLevel.Skybox:Clone()
+	self._skybox.Parent = Lighting
+	LightingService:loadDescription(StoreService:getState().liveOpsData.Lighting[newLevel.Name])
 
 	-- initialize enemies
 	local enemySpawns = getTaggedInstancesInDirectory(self._loadedLevel, CONFIG.Keys.Tags.EnemySpawn)
@@ -81,6 +91,7 @@ end
 
 function Level:destroy()
 	self._loadedLevel:Destroy()
+	self._skybox:Destroy()
 	for _index, enemy in ipairs(self._enemies) do
 		enemy:destroy()
 	end

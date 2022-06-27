@@ -10,6 +10,14 @@
 			}
 		},
 
+		"Lighting": {
+			"$className": "Lighting",
+			"$properties": {
+				"GlobalShadows": true,
+				"Technology": "ShadowMap"
+			}
+		},
+
 		"ReplicatedStorage": {
 			"$className": "ReplicatedStorage",
 			"$path": "src/shared",

@@ -23,10 +23,6 @@ local StaticLiveOpsData = Llama.Dictionary.throwOnNilIndex({
 		Retries = 3;
 		RetryDelay = 0.5;
 	};
-	Environment = {
-		Skybox = {};
-		Lighting = {};
-	};
 	Enemy = {
 		HealthMultiplier = 100;
 		PathRefreshRate = 1;
@@ -75,25 +71,60 @@ local StaticLiveOpsData = Llama.Dictionary.throwOnNilIndex({
 		Died = "YOU DIED";
 		DefeatAllEnemies = "DEFEAT ALL ENEMIES TO CONTINUE";
 	};
-	Levels = {
-		Archipelago = {
-			Environment = {
-				Skybox = {
-					CelestialBodiesShown = true;
-					SkyboxBk = 591058823;
-					SkyboxDn = 591059876;
-					SkyboxFt = 591058104;
-					SkyboxLf = 591057861;
-					SkyboxRt = 591057625;
-					SkyboxUp = 591059642;
-				};
-				Lighting = {
-					Brightness = 3;
-					EnvironmentDiffuseScale = 1;
-					EnvironmentSpecularScale = 1;
-					ShadowSoftness = 0.5;
-				};
-			}
+	Lighting = {
+		Archipelago = {};
+		CastlePlanet = {
+			Brightness = 10;
+		};
+		Hell = {
+			Brightness = 0;
+			OutdoorAmbient = {
+				R = 165;
+				G = 165;
+				B = 165;
+			};
+		};
+		Northada = {
+			Ambient = {
+				R = 150;
+				G = 150;
+				B = 150;
+			};
+			Brightness = 0;
+		};
+		Volcano = {
+			Ambient = {
+				R = 130;
+				G = 87;
+				B = 0;
+			};
+			Brightness = 3;
+			ColorShift_Top = {
+				R = 181;
+				G = 248;
+				B = 255;
+			};
+			OutdoorAmbient = {
+				R = 127;
+				G = 109;
+				B = 87;
+			};
+		};
+		Default = {
+			Ambient = {
+				R = 0,
+				G = 0,
+				B = 0
+			};
+			Brightness = 2;
+			EnvironmentDiffuseScale = 1;
+			EnvironmentSpecularScale = 1;
+			OutdoorAmbient = {
+				R = 127;
+				G = 127;
+				B = 127;
+			};
+			ShadowSoftness = 0;
 		}
 	};
 })
@@ -120,10 +151,6 @@ game:GetService("DataStoreService"):GetDataStore("LiveOps"):SetAsync("LiveOpsDat
 		Retries = 3;
 		RetryDelay = 0.5;
 	};
-	Environment = {
-		Skybox = {};
-		Lighting = {};
-	};
 	Enemy = {
 		HealthMultiplier = 100;
 		PathRefreshRate = 1;
@@ -172,25 +199,60 @@ game:GetService("DataStoreService"):GetDataStore("LiveOps"):SetAsync("LiveOpsDat
 		Died = "YOU DIED";
 		DefeatAllEnemies = "DEFEAT ALL ENEMIES TO CONTINUE";
 	};
-	Levels = {
-		Archipelago = {
-			Environment = {
-				Skybox = {
-					CelestialBodiesShown = true;
-					SkyboxBk = 591058823;
-					SkyboxDn = 591059876;
-					SkyboxFt = 591058104;
-					SkyboxLf = 591057861;
-					SkyboxRt = 591057625;
-					SkyboxUp = 591059642;
-				};
-				Lighting = {
-					Brightness = 3;
-					EnvironmentDiffuseScale = 1;
-					EnvironmentSpecularScale = 1;
-					ShadowSoftness = 0.5;
-				};
-			}
+	Lighting = {
+		Archipelago = {};
+		CastlePlanet = {
+			Brightness = 10;
+		};
+		Hell = {
+			Brightness = 0;
+			OutdoorAmbient = {
+				R = 165;
+				G = 165;
+				B = 165;
+			};
+		};
+		Northada = {
+			Ambient = {
+				R = 150;
+				G = 150;
+				B = 150;
+			};
+			Brightness = 0;
+		};
+		Volcano = {
+			Ambient = {
+				R = 130;
+				G = 87;
+				B = 0;
+			};
+			Brightness = 3;
+			ColorShift_Top = {
+				R = 181;
+				G = 248;
+				B = 255;
+			};
+			OutdoorAmbient = {
+				R = 127;
+				G = 109;
+				B = 87;
+			};
+		};
+		Default = {
+			Ambient = {
+				R = 0,
+				G = 0,
+				B = 0
+			};
+			Brightness = 2;
+			EnvironmentDiffuseScale = 1;
+			EnvironmentSpecularScale = 1;
+			OutdoorAmbient = {
+				R = 127;
+				G = 127;
+				B = 127;
+			};
+			ShadowSoftness = 0;
 		}
 	};
 })
