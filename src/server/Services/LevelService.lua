@@ -89,8 +89,10 @@ function LevelService:_loadLevel(levelName)
 	assert(level, Responses.LevelService.InvalidLevelName)
 	self:_unloadLevel()
 	self._loadedLevel = Level.new(self, level)
+	self._loadedLevel.levelLoaded:connect(function()
+		self:_broadcastLevelLoaded(levelName)
+	end)
 	self._loadedLevel:init()
-	self:_broadcastLevelLoaded(levelName)
 end
 
 function LevelService:_unloadLevel()

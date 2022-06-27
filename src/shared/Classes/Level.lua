@@ -4,6 +4,9 @@ local Lighting = game:GetService("Lighting")
 
 local CONFIG = require(ReplicatedStorage.Constants.CONFIG)
 
+local packages = ReplicatedStorage.Packages
+local Signal = require(packages.Signal)
+
 local sharedServices = ReplicatedStorage.Services
 local PlayerService = require(sharedServices.PlayerService)
 local StoreService = require(sharedServices.StoreService)
@@ -23,6 +26,7 @@ Level.__index = Level
 
 function Level.new(levelService, levelTemplate)
 	local self = setmetatable({
+		levelLoaded = Signal.new();
 		_levelService = levelService;
 		_levelTemplate = levelTemplate;
 		_levelEndTrigger = nil;
@@ -46,6 +50,7 @@ function Level:init()
 	self._skybox = newLevel.Skybox:Clone()
 	self._skybox.Parent = Lighting
 	LightingService:loadDescription(StoreService:getState().liveOpsData.Lighting[newLevel.Name])
+	self.levelLoaded:fire()
 
 	-- initialize enemies
 	local enemySpawns = getTaggedInstancesInDirectory(self._loadedLevel, CONFIG.Keys.Tags.EnemySpawn)
