@@ -75,6 +75,14 @@ function PlayerService:init()
 end
 
 if RunService:IsServer() then
+	function PlayerService:anchorAllPlayers()
+		for _, player in ipairs(self:getPlayers()) do
+			if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+				player.Character.HumanoidRootPart.Anchored = true
+			end
+		end
+	end
+
 	function PlayerService:respawnAllPlayers()
 		for _, player in ipairs(self:getPlayers()) do
 			task.spawn(function()

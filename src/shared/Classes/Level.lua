@@ -95,6 +95,7 @@ function Level:getSpawnPosition()
 end
 
 function Level:destroy()
+	PlayerService:anchorAllPlayers()
 	self._loadedLevel:Destroy()
 	self._skybox:Destroy()
 	for _index, enemy in ipairs(self._enemies) do
