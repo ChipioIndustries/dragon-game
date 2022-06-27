@@ -14,6 +14,7 @@ local components = ReplicatedStorage.Components
 local Menu = require(components.Menu)
 local HUD = require(components.HUD)
 local Cutscenes = require(components.Cutscenes)
+local Notifications = require(components.Notifications)
 
 local App = Roact.Component:extend("App")
 
@@ -43,6 +44,7 @@ function App:render()
 				setEnvironment = setEnvironment;
 			});
 			Cutscenes = Roact.createElement(Cutscenes);
+			Notifications = Roact.createElement(Notifications);
 		})
 	end
 

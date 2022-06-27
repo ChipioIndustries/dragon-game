@@ -5,7 +5,7 @@ local Actions = require(constants.Actions)
 local Enums = require(constants.Enums)
 
 local function weaponReducer(state, action)
-	state = state or Enums.Weapon.GoldenSword
+	state = state or Enums.Weapon.Bat
 	if action.type == Actions.setWeapon then
 		return action.weapon
 	end

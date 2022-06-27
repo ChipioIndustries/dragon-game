@@ -71,6 +71,10 @@ local StaticLiveOpsData = Llama.Dictionary.throwOnNilIndex({
 		};
 		SwingCooldown = 1;
 	};
+	Notifications = {
+		Died = "YOU DIED";
+		DefeatAllEnemies = "DEFEAT ALL ENEMIES TO CONTINUE";
+	};
 	Levels = {
 		Archipelago = {
 			Environment = {
@@ -163,6 +167,10 @@ game:GetService("DataStoreService"):GetDataStore("LiveOps"):SetAsync("LiveOpsDat
 			GoldenSword = 100;
 		};
 		SwingCooldown = 1;
+	};
+	Notifications = {
+		Died = "YOU DIED";
+		DefeatAllEnemies = "DEFEAT ALL ENEMIES TO CONTINUE";
 	};
 	Levels = {
 		Archipelago = {

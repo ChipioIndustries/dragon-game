@@ -11,10 +11,6 @@ local Button = require(components.Button)
 
 local Menu = Roact.Component:extend("Menu")
 
-function Menu:init()
-	-- TODO: cutscene?
-end
-
 function Menu:render()
 	local props = self.props
 	local setEnvironment = props.setEnvironment
@@ -34,7 +30,7 @@ function Menu:render()
 		});
 		Title = Roact.createElement("TextLabel", {
 			Text = "DERGON GAME";
-			Font = Enum.Font.PermanentMarker;
+			Font = Enum.Font.Bodoni;
 			TextScaled = true;
 			BackgroundTransparency = 1;
 			Size = UDim2.new(1, 0, 0, 100);

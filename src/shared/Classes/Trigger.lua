@@ -35,7 +35,7 @@ function Trigger:init()
 end
 
 function Trigger:activate(player)
-	local success = self:_callback(player)
+	local success = self._callback(player)
 	if success then
 		self:destroy()
 	end
